@@ -495,8 +495,7 @@ public class SignUp extends javax.swing.JFrame {
     private void JButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButton4ActionPerformed
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(null,"Please wait until your account activated");
-        LogIn login = new LogIn();
-        login.show();
+
         this.dispose();
         
 
