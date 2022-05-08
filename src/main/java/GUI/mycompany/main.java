@@ -4,7 +4,7 @@
  */
 package GUI.mycompany;
 
-import GUI.mycompany.logIn;
+import GUI.mycompany.LogIn;
 
 /**
  *
@@ -12,6 +12,6 @@ import GUI.mycompany.logIn;
  */
 public class main {
     public static void main(String[] args) {
-       logIn login = new logIn();
+       LogIn login = new LogIn();
     }
 }
