@@ -16,19 +16,19 @@ public class Person implements IPerson {
 
     private int id;
     private String name;
-    private String email;
-    private Date birtDate;
-    private String gender;
     private String surname;
-    private String userName;
+    private String email;
+    private String birthDate;
+    private String gender;
     private String password;
     private String phoneNumber;
     private String identityNumber;
-    
-    public Person(){  }
 
-    public Date getBirtDate() {
-        return birtDate;
+    public Person() {
+    }
+
+    public String getBirthDate() {
+        return birthDate;
     }
 
     public String getEmail() {
@@ -63,12 +63,8 @@ public class Person implements IPerson {
         return surname;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setBirtDate(Date birtDate) {
-        this.birtDate = birtDate;
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
 
     public void setEmail(String email) {
@@ -101,10 +97,6 @@ public class Person implements IPerson {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     @Override
