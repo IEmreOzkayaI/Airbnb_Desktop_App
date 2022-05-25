@@ -2,7 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package GUI.mycompany;
+package Singleton;
+
+import GUI.mycompany.Home;
+import GUI.mycompany.SignUp;
+import java.sql.Connection;
 
 
 /**
@@ -11,5 +15,7 @@ package GUI.mycompany;
  */
 public class main {
     public static void main(String[] args) {
+       Home home = new Home();
+       home.show();
     }
 }

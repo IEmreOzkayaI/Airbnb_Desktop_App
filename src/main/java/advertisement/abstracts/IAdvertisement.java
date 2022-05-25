@@ -6,7 +6,6 @@ package advertisement.abstracts;
 
 import advertisement.concretes.Advertisement;
 import java.util.List;
-import users.concretes.Person;
 
 /**
  *

@@ -14,6 +14,5 @@ import java.util.List;
  */
 public interface ICustomer {
     boolean register(Person person);
-    void blockPerson(Person person , Block block);
     List<Person> getAllIsBlockTrue();
 }

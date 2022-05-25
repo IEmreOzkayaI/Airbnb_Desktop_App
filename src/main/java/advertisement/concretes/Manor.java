@@ -10,7 +10,7 @@ import advertisement.abstracts.House;
  *
  * @author EmreOzkaya
  */
-public class Apartment extends House {
+public class Manor extends House {
 
     @Override
     public void create(int houseOwnerId, int advertisementId) {

@@ -8,6 +8,7 @@ package user.concretes;
  *
  * @author EmreOzkaya
  */
-public class Personnel {
-    
+public class Personnel  extends Person{
+
+   
 }
