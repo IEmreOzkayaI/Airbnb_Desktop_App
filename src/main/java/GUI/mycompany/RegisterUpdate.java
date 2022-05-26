@@ -20,14 +20,14 @@ import javax.swing.JOptionPane;
  *
  * @author EmreOzkaya
  */
-public class LogIn extends javax.swing.JFrame {
+public class RegisterUpdate extends javax.swing.JFrame {
 
     /**
      * Creates new form Home
      */
     Connection db;
 
-    public LogIn() {
+    public RegisterUpdate() {
         initComponents();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
@@ -54,8 +54,8 @@ public class LogIn extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         email = new javax.swing.JTextField();
         logIn = new javax.swing.JButton();
-        forgotPassword = new javax.swing.JButton();
         password = new javax.swing.JPasswordField();
+        repeatOfPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Air Bnb");
@@ -124,7 +124,7 @@ public class LogIn extends javax.swing.JFrame {
         logIn.setBackground(new java.awt.Color(51, 51, 51));
         logIn.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         logIn.setForeground(new java.awt.Color(255, 255, 255));
-        logIn.setText("Log In");
+        logIn.setText("Submit");
         logIn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 logInMouseClicked(evt);
@@ -136,25 +136,21 @@ public class LogIn extends javax.swing.JFrame {
             }
         });
 
-        forgotPassword.setBackground(new java.awt.Color(51, 51, 51));
-        forgotPassword.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        forgotPassword.setForeground(new java.awt.Color(255, 255, 255));
-        forgotPassword.setText("Forgot Password ? ");
-        forgotPassword.setBorder(null);
-        forgotPassword.setMaximumSize(new java.awt.Dimension(150, 22));
-        forgotPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                forgotPasswordActionPerformed(evt);
-            }
-        });
-
         password.setBackground(new java.awt.Color(51, 51, 51));
         password.setForeground(new java.awt.Color(255, 255, 255));
         password.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "PASSWORD", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
-        password.setPreferredSize(new java.awt.Dimension(64, 42));
         password.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 passwordActionPerformed(evt);
+            }
+        });
+
+        repeatOfPassword.setBackground(new java.awt.Color(51, 51, 51));
+        repeatOfPassword.setForeground(new java.awt.Color(255, 255, 255));
+        repeatOfPassword.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "REPEAT OF PASSWORD", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        repeatOfPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repeatOfPasswordActionPerformed(evt);
             }
         });
 
@@ -165,14 +161,13 @@ public class LogIn extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(repeatOfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                             .addGap(95, 95, 95)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(logIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(forgotPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(logIn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(89, 89, 89))))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
@@ -181,13 +176,13 @@ public class LogIn extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addGap(29, 29, 29)
                 .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(75, 75, 75)
+                .addGap(36, 36, 36)
+                .addComponent(repeatOfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
                 .addComponent(logIn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(forgotPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 180, 480, 480));
@@ -206,34 +201,36 @@ public class LogIn extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void forgotPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPasswordActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-        RegisterUpdate reg = new RegisterUpdate();
-        reg.show();
-    }//GEN-LAST:event_forgotPasswordActionPerformed
-
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
-        Customer customer = new Customer().getUserByEmail(email.getText());
-        if (customer.isActivationResult()) {
-            if (email.getText() == null || password.getText() == null) {
-                JOptionPane.showMessageDialog(null, "There exist missing field");
+
+        if (email.getText().isBlank() || password.getPassword() == null || repeatOfPassword.getPassword() == null) {
+            JOptionPane.showMessageDialog(null, "There exist missing field");
+        } else if (!password.getText().equals(repeatOfPassword.getText())) {
+            JOptionPane.showMessageDialog(null, "Passwords are not same");
+
+        } else {
+            if (!isEmailFormatValid()) {
+                JOptionPane.showMessageDialog(null, "Email format is not valid");
+            } else if (!userIsCurrent()) {
+                JOptionPane.showMessageDialog(null, "Email does not exist");
             } else {
-                if (!isEmailFormatValid()) {
-                    JOptionPane.showMessageDialog(null, "Email format is not valid");
-                } else if (!userIsCurrent()) {
-                    JOptionPane.showMessageDialog(null, "Email or password is not valid");
-                } else {
+                String pass = new String(password.getPassword());
+
+                if (new Customer().updatePassword(email.getText(), pass)) {
+                    JOptionPane.showMessageDialog(null, "Password updated , have a good search");
+
                     this.dispose();
                     Home home = new Home();
                     home.show();
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Your account is examining , Thanks for your patience ");
+                } else {
+                    JOptionPane.showMessageDialog(null, "This password is same of last password");
 
+                }
+
+            }
         }
+
 
     }//GEN-LAST:event_logInActionPerformed
 
@@ -258,6 +255,10 @@ public class LogIn extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordActionPerformed
 
+    private void repeatOfPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repeatOfPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_repeatOfPasswordActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -272,17 +273,33 @@ public class LogIn extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LogIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RegisterUpdate.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LogIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RegisterUpdate.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LogIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RegisterUpdate.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LogIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RegisterUpdate.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -295,7 +312,7 @@ public class LogIn extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LogIn().setVisible(true);
+                new RegisterUpdate().setVisible(true);
             }
         });
     }
@@ -303,7 +320,6 @@ public class LogIn extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField email;
-    private javax.swing.JButton forgotPassword;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -312,9 +328,9 @@ public class LogIn extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JButton logIn;
     private javax.swing.JPasswordField password;
+    private javax.swing.JPasswordField repeatOfPassword;
     private javax.swing.JButton turnHome;
     // End of variables declaration//GEN-END:variables
-
     private boolean isEmailFormatValid() {
         String EMAIL_PATTERN = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}";
         java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(EMAIL_PATTERN,
@@ -324,7 +340,7 @@ public class LogIn extends javax.swing.JFrame {
 
     private boolean userIsCurrent() {
         String pass = new String(password.getPassword());
-        String isUserValid = " SELECT email,password FROM persons WHERE email='" + email.getText() + "' and password='" + pass + "'";
+        String isUserValid = " SELECT email,password FROM persons WHERE email='" + email.getText() + "'";
 
         try {
             Statement stmt = db.createStatement();
@@ -333,12 +349,13 @@ public class LogIn extends javax.swing.JFrame {
                 return true;
             } else {
                 return false;
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Customer.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return false;
 
     }
-
 }

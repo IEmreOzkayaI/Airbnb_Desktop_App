@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import user.concretes.Customer;
+import user.concretes.Person;
 
 /**
  *
@@ -27,10 +28,8 @@ public class SignUp extends javax.swing.JFrame {
     /**
      * Creates new form SignUp
      */
-    static int id;
     Connection db;
-    String insertionPerson = "INSERT INTO persons VALUES(?,?,?,?,?,?,?,?,?)";
-    String insertionCustomer = "INSERT INTO customers VALUES(?,?,?,?,?,?)";
+
     String insertionHouseOwner = "INSERT INTO houseowners  VALUES(?,?,?,?,?,?)";
 
     public SignUp() {
@@ -323,51 +322,48 @@ public class SignUp extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
-        if (name.getText() == null || surname.getText() == null || email.getText() == null || password.getText() == null || repeatOfPassword.getText() == null || phoneNumber.getText() == null || identityNumber.getText() == null || birthDate.getText() == null || gender.getSelection() == null) {
+        Customer customer = new Customer();
+        if (name.getText().isEmpty() || surname.getText().isEmpty() || email.getText().isEmpty() || password.getText().isEmpty() || repeatOfPassword.getText().isEmpty() || phoneNumber.getText().isEmpty() || identityNumber.getText().isEmpty() || birthDate.getText().isEmpty() || gender.getSelection() == null) {
             JOptionPane.showMessageDialog(null, "There exist missing field");
         } else {
             if (!isEmailFormatValid()) {
                 JOptionPane.showMessageDialog(null, "Email not valid");
             }
 
-            if (!password.getText().equals(repeatOfPassword.getText())) {
+            else if (!password.getText().equals(repeatOfPassword.getText())) {
                 JOptionPane.showMessageDialog(null, "Passwords are not same");
-            } // mevcut olma durumu
-            //------
-            else {
-                try {
-                    PreparedStatement prepstmtPerson = db.prepareStatement(insertionPerson);
-                    PreparedStatement prepstmtCustomer = db.prepareStatement(insertionCustomer);
+            }
+            else if (customer.emailExist(email.getText())) {
+                JOptionPane.showMessageDialog(null, " Email already exist ! ");
+            }
+            else if (customer.identityExist(identityNumber.getText())) {
+                JOptionPane.showMessageDialog(null, " User already exist ! ");
 
-                    prepstmtPerson.setInt(1, id);
-                    prepstmtPerson.setString(2, name.getText());
-                    prepstmtPerson.setString(3, surname.getText());
-                    prepstmtPerson.setString(4, email.getText());
-                    prepstmtPerson.setString(5, password.getPassword().toString());
-                    if (male.isSelected()) {
-                        prepstmtPerson.setString(6, "male");
-                    } else {
-                        prepstmtPerson.setString(6, "female");
+            } else { // No error so register user.
+                String pass = new String(password.getPassword());
 
-                    }
-                    prepstmtPerson.setString(7, phoneNumber.getText());
-                    prepstmtPerson.setString(8, identityNumber.getText());
-                    prepstmtPerson.setString(9, birthDate.getText());
-
-                    prepstmtCustomer.setInt(1,id);
-                    prepstmtCustomer.setInt(2, 0);
-                    prepstmtCustomer.setInt(3, 0);
-                    prepstmtCustomer.setInt(4, 0);
-                    prepstmtCustomer.setBoolean(5, false);
-                    prepstmtCustomer.setBoolean(6, false);
-                    prepstmtCustomer.execute();
-                    JOptionPane.showMessageDialog(null, "Thanks For Join Us , Please Wait Personnel Validation");
-
-                    prepstmtPerson.execute();
-                } catch (SQLException ex) {
-                    Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
+                customer.setBirthDate(birthDate.getText());
+                customer.setEmail(email.getText());
+                if (gender.getSelection().toString().equalsIgnoreCase("Male")) {
+                    customer.setGender("male");
+                } else {
+                    customer.setGender("female");
                 }
+                customer.setId(0);
+                customer.setIdentityNumber(identityNumber.getText());
+                customer.setName(name.getText());
+                customer.setPassword(pass);
+                customer.setPhoneNumber(phoneNumber.getText());
+                customer.setSurname(surname.getText());
+                if (customer.register(customer)) {
+                    JOptionPane.showMessageDialog(null, "Thanks For Join Us , Please Wait Personnel Validation");
+                    Home home = new Home();
+                    home.show();
+                    this.dispose();
+                   } else {
+                    JOptionPane.showMessageDialog(null, "Error! ");
+                }
+
             }
 
         }
