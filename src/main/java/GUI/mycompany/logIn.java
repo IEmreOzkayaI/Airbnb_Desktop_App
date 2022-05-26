@@ -125,6 +125,12 @@ public class LogIn extends javax.swing.JFrame {
         logIn.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         logIn.setForeground(new java.awt.Color(255, 255, 255));
         logIn.setText("Log In");
+        logIn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logIn.setDefaultCapable(false);
+        logIn.setOpaque(true);
+        logIn.setRequestFocusEnabled(false);
+        logIn.setRolloverEnabled(false);
+        logIn.setVerifyInputWhenFocusTarget(false);
         logIn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 logInMouseClicked(evt);
@@ -141,6 +147,7 @@ public class LogIn extends javax.swing.JFrame {
         forgotPassword.setForeground(new java.awt.Color(255, 255, 255));
         forgotPassword.setText("Forgot Password ? ");
         forgotPassword.setBorder(null);
+        forgotPassword.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         forgotPassword.setMaximumSize(new java.awt.Dimension(150, 22));
         forgotPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -226,7 +233,7 @@ public class LogIn extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Email or password is not valid");
                 } else {
                     this.dispose();
-                    Home home = new Home();
+                    Home home = new Home(true,customer);
                     home.show();
                 }
             }

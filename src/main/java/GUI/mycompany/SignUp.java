@@ -64,7 +64,7 @@ public class SignUp extends javax.swing.JFrame {
         surname = new javax.swing.JTextField();
         phoneNumber = new javax.swing.JTextField();
         identityNumber = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        signUp = new javax.swing.JButton();
         birthDate = new javax.swing.JFormattedTextField();
         repeatOfPassword = new javax.swing.JPasswordField();
         password = new javax.swing.JPasswordField();
@@ -180,14 +180,15 @@ public class SignUp extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(51, 51, 51));
-        jButton1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("SIGN UP");
-        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        signUp.setBackground(new java.awt.Color(51, 51, 51));
+        signUp.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        signUp.setForeground(new java.awt.Color(255, 255, 255));
+        signUp.setText("SIGN UP");
+        signUp.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        signUp.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        signUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                signUpActionPerformed(evt);
             }
         });
 
@@ -229,7 +230,7 @@ public class SignUp extends javax.swing.JFrame {
                         .addComponent(phoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(repeatOfPassword))
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(signUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -276,7 +277,7 @@ public class SignUp extends javax.swing.JFrame {
                     .addComponent(female)
                     .addComponent(male))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(signUp, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(32, Short.MAX_VALUE))
         );
 
@@ -320,7 +321,7 @@ public class SignUp extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_identityNumberActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void signUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpActionPerformed
         // TODO add your handling code here:
         Customer customer = new Customer();
         if (name.getText().isEmpty() || surname.getText().isEmpty() || email.getText().isEmpty() || password.getText().isEmpty() || repeatOfPassword.getText().isEmpty() || phoneNumber.getText().isEmpty() || identityNumber.getText().isEmpty() || birthDate.getText().isEmpty() || gender.getSelection() == null) {
@@ -369,7 +370,7 @@ public class SignUp extends javax.swing.JFrame {
         }
 
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_signUpActionPerformed
 
     private void birthDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_birthDateActionPerformed
         // TODO add your handling code here:
@@ -430,7 +431,6 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JRadioButton female;
     private javax.swing.ButtonGroup gender;
     private javax.swing.JTextField identityNumber;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
@@ -441,6 +441,7 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JPasswordField password;
     private javax.swing.JTextField phoneNumber;
     private javax.swing.JPasswordField repeatOfPassword;
+    private javax.swing.JButton signUp;
     private javax.swing.JTextField surname;
     private javax.swing.JButton turnHome;
     // End of variables declaration//GEN-END:variables

@@ -6,6 +6,8 @@ package GUI.mycompany;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JButton;
+import user.concretes.Customer;
 
 /**
  *
@@ -16,11 +18,39 @@ public class Home extends javax.swing.JFrame {
     /**
      * Creates new form Home2
      */
+    static boolean isLogin = false;
+    private static Customer customer;
+
     public Home() {
         initComponents();
-         Toolkit toolkit = getToolkit();
+        Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
+        this.isLogin = isLogin;
+
+    }
+
+    public Home(boolean isLogin, Customer customer) {
+        initComponents();
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
+        this.isLogin = isLogin;
+        if (isLogin) {
+            signUp.hide();
+            logIn.hide();
+            navbar.setPreferredSize(new Dimension(1049, 56));
+            searchBar.setBounds(100, 8, 600, 41);
+            this.navbar.add(searchBar);
+            this.navbar.add(profile);
+            this.navbar.add(becameHouseOwner);
+            this.remove(becameHouseOwner);
+            this.remove(profile);
+            profile.setBounds(900, 8, 100, 40);
+            profile.setText(customer.getName().toUpperCase());
+            becameHouseOwner.setBounds(775, 8, 100, 40);
+
+        }
     }
 
     /**
@@ -32,6 +62,8 @@ public class Home extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        profile = new javax.swing.JButton();
+        becameHouseOwner = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         residenceFilter = new javax.swing.JButton();
@@ -39,12 +71,39 @@ public class Home extends javax.swing.JFrame {
         villaFilter = new javax.swing.JButton();
         treeHouseFilter = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
+        navbar = new javax.swing.JPanel();
         signUp = new javax.swing.JButton();
         logIn = new javax.swing.JButton();
         searchBar = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        homeList = new javax.swing.JTable();
+        advertisementList = new javax.swing.JTable();
+
+        profile.setBackground(new java.awt.Color(51, 51, 51));
+        profile.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        profile.setForeground(new java.awt.Color(255, 255, 255));
+        profile.setText("Log In");
+        profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        profile.setDefaultCapable(false);
+        profile.setPreferredSize(new java.awt.Dimension(80, 40));
+        profile.setRequestFocusEnabled(false);
+        profile.setRolloverEnabled(false);
+        profile.setVerifyInputWhenFocusTarget(false);
+
+        becameHouseOwner.setBackground(new java.awt.Color(153, 153, 153));
+        becameHouseOwner.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        becameHouseOwner.setForeground(new java.awt.Color(255, 255, 255));
+        becameHouseOwner.setText("Sign Up");
+        becameHouseOwner.setBorder(null);
+        becameHouseOwner.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        becameHouseOwner.setPreferredSize(new java.awt.Dimension(80, 40));
+        becameHouseOwner.setRequestFocusEnabled(false);
+        becameHouseOwner.setRolloverEnabled(false);
+        becameHouseOwner.setVerifyInputWhenFocusTarget(false);
+        becameHouseOwner.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                becameHouseOwnerActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1330, 800));
@@ -94,15 +153,20 @@ public class Home extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(51, 51, 51));
         jPanel3.setPreferredSize(new java.awt.Dimension(1101, 800));
 
-        jPanel4.setBackground(new java.awt.Color(153, 153, 153));
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        navbar.setBackground(new java.awt.Color(153, 153, 153));
+        navbar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         signUp.setBackground(new java.awt.Color(153, 153, 153));
         signUp.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         signUp.setForeground(new java.awt.Color(255, 255, 255));
         signUp.setText("Sign Up");
         signUp.setBorder(null);
+        signUp.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        signUp.setDefaultCapable(false);
         signUp.setPreferredSize(new java.awt.Dimension(80, 40));
+        signUp.setRequestFocusEnabled(false);
+        signUp.setRolloverEnabled(false);
+        signUp.setVerifyInputWhenFocusTarget(false);
         signUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 signUpActionPerformed(evt);
@@ -113,7 +177,12 @@ public class Home extends javax.swing.JFrame {
         logIn.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         logIn.setForeground(new java.awt.Color(255, 255, 255));
         logIn.setText("Log In");
+        logIn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logIn.setDefaultCapable(false);
         logIn.setPreferredSize(new java.awt.Dimension(80, 40));
+        logIn.setRequestFocusEnabled(false);
+        logIn.setRolloverEnabled(false);
+        logIn.setVerifyInputWhenFocusTarget(false);
         logIn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logInActionPerformed(evt);
@@ -132,33 +201,33 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout navbarLayout = new javax.swing.GroupLayout(navbar);
+        navbar.setLayout(navbarLayout);
+        navbarLayout.setHorizontalGroup(
+            navbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, navbarLayout.createSequentialGroup()
                 .addGap(96, 96, 96)
                 .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
                 .addComponent(signUp, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(logIn, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addComponent(logIn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+        navbarLayout.setVerticalGroup(
+            navbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, navbarLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(signUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(logIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(navbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(signUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchBar, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        homeList.setBackground(new java.awt.Color(153, 153, 153));
-        homeList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        homeList.setModel(new javax.swing.table.DefaultTableModel(
+        advertisementList.setBackground(new java.awt.Color(153, 153, 153));
+        advertisementList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        advertisementList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -166,7 +235,7 @@ public class Home extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(homeList);
+        jScrollPane1.setViewportView(advertisementList);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -175,16 +244,16 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(navbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addComponent(navbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 606, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -213,9 +282,7 @@ public class Home extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,6 +297,7 @@ public class Home extends javax.swing.JFrame {
         SignUp signUp = new SignUp();
         this.dispose();
         signUp.show();
+
     }//GEN-LAST:event_signUpActionPerformed
 
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
@@ -237,11 +305,16 @@ public class Home extends javax.swing.JFrame {
         LogIn logIn = new LogIn();
         this.dispose();
         logIn.show();
+
     }//GEN-LAST:event_logInActionPerformed
 
     private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_searchBarActionPerformed
+
+    private void becameHouseOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_becameHouseOwnerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_becameHouseOwnerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -274,20 +347,26 @@ public class Home extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home().setVisible(true);
+                if (isLogin) {
+                    new Home(isLogin, customer).setVisible(true);
+                } else {
+                    new Home().setVisible(true);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable advertisementList;
     private javax.swing.JButton apartmentFilter;
-    private javax.swing.JTable homeList;
+    private javax.swing.JButton becameHouseOwner;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton logIn;
+    private javax.swing.JPanel navbar;
+    private javax.swing.JButton profile;
     private javax.swing.JButton residenceFilter;
     private javax.swing.JTextField searchBar;
     private javax.swing.JButton signUp;

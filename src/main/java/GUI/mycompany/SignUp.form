@@ -168,7 +168,7 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="repeatOfPassword" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jButton1" max="32767" attributes="0"/>
+                          <Component id="signUp" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
@@ -230,7 +230,7 @@
                           <Component id="male" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="signUp" min="-2" pref="34" max="-2" attributes="0"/>
                       <EmptySpace pref="32" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -384,7 +384,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="identityNumberActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="signUp">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="33" green="33" red="33" type="rgb"/>
@@ -403,9 +403,12 @@
                     </LineBorder>
                   </Border>
                 </Property>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="signUpActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="birthDate">
