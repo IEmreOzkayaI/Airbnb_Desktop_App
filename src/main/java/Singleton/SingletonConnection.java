@@ -14,7 +14,20 @@ import java.sql.DriverManager;
 public class SingletonConnection {
 
     private static Connection conn;
-
+    public static String insertionPerson = "INSERT INTO persons VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+    public static String insertionCustomer = "INSERT INTO customers VALUES(?,?,?,?)";
+    public static String insertionHouseOwner = "INSERT INTO house_owners VALUES(?,?,?,?)";
+    public static String deleteFromCustomer = "DELETE FROM customers WHERE person_id=";
+    public static String getCustomerInfoById = "SELECT * FROM customers WHERE person_id=";
+    public static String insertionHouse = "INSERT INTO houses VALUES(?,?,?,?,?,?,?)";
+    public static String insertionAdvertisement = "INSERT INTO advertisements VALUES(?,?,?,?,?,?,?,?,?)";
+    public static String getAdvertisementByPersonId = "SELECT * FROM advertisements WHERE person_id=";
+    public static String getHouseByPersonId = "SELECT * FROM houses WHERE person_id=";
+    public static String getImageByHouseId = "SELECT * FROM house_images WHERE house_id=";
+    public static String insertionHouseImages = "INSERT INTO house_images VALUES(?,?,?,?)";
+    public static String getAllAdvertisementsIsActiveFalse = "SELECT * FROM advertisements WHERE activation_result=false";
+    public static String getAllPersonIsActiveFalse = "SELECT * FROM persons WHERE activation_result=false";
+  
     private SingletonConnection() {
         getCon();
     }

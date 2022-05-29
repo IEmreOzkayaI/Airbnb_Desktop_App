@@ -25,23 +25,20 @@ import user.abstracts.ICustomer;
  */
 public class Customer extends Person implements ICustomer {
 
+    private int person_id;
     private Wallet wallet;
     private House rentedHouse;
     private List<Comment> comments;
-    private Personnel activationPersonnel;
-    private boolean activationResult;
+
     private boolean isBlocked;
     private Connection db = Singleton.SingletonConnection.getCon();
-    private String insertionPerson = "INSERT INTO persons VALUES(?,?,?,?,?,?,?,?,?)";
-    private String insertionCustomer = "INSERT INTO customers VALUES(?,?,?,?,?,?)";
 
     public Customer() {
         super();
         wallet = new Wallet(this.getId());
         rentedHouse = null;
         comments = null;
-        activationPersonnel = null;
-        activationResult = false;
+
         isBlocked = false;
     }
 
@@ -51,8 +48,8 @@ public class Customer extends Person implements ICustomer {
 
         try {
 
-            PreparedStatement prepstmtPerson = getDb().prepareStatement(getInsertionPerson());
-            PreparedStatement prepstmtCustomer = getDb().prepareStatement(getInsertionCustomer());
+            PreparedStatement prepstmtPerson = db.prepareStatement(Singleton.SingletonConnection.insertionPerson);
+            PreparedStatement prepstmtCustomer = db.prepareStatement(Singleton.SingletonConnection.insertionCustomer);
             // this id is null value because our database id increasing auto.
             // because of a error we couldn't do fk relation on the database table.So we use different values.
             int id = 0;
@@ -65,15 +62,16 @@ public class Customer extends Person implements ICustomer {
             prepstmtPerson.setString(7, person.getPhoneNumber());
             prepstmtPerson.setString(8, person.getIdentityNumber());
             prepstmtPerson.setString(9, person.getBirthDate());
+            prepstmtPerson.setInt(10, person.getActivationPersonnelId());
+            prepstmtPerson.setBoolean(11, person.isActivationResult());
 
             prepstmtPerson.execute();
-
-            prepstmtCustomer.setInt(1, id);
-            prepstmtCustomer.setString(2, null);
-            prepstmtCustomer.setString(3, null);
-            prepstmtCustomer.setString(4, null);
-            prepstmtCustomer.setBoolean(5, false);
-            prepstmtCustomer.setBoolean(6, false);
+            Person temp_Person = new Person();
+            int customer_id = temp_Person.getUserByEmail(person.getEmail()).getId();
+            prepstmtCustomer.setInt(1, customer_id);
+            prepstmtCustomer.setInt(2, 0);
+            prepstmtCustomer.setInt(3, 0);
+            prepstmtCustomer.setBoolean(4, false);
 
             prepstmtCustomer.execute();
 
@@ -85,56 +83,12 @@ public class Customer extends Person implements ICustomer {
 
     }
 
-    public boolean emailExist(String email) {
-        String isUserRegistered = " SELECT email FROM persons WHERE email='" + email + "'";
-
-        try {
-            Statement stmt = getDb().createStatement();
-            ResultSet rs = stmt.executeQuery(isUserRegistered);
-            return rs.next();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-
-    public boolean identityExist(String identity) {
-        String isUserRegistered = " SELECT email FROM persons WHERE identity_number='" + identity + "'";
-
-        try {
-            Statement stmt = getDb().createStatement();
-            ResultSet rs = stmt.executeQuery(isUserRegistered);
-            return rs.next();
-        } catch (SQLException ex) {
-            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-
-    public boolean updatePassword(String email, String password) {
-        String update = " UPDATE persons SET password='" + password + "' WHERE email='" + email + "'";
-        Customer customer = getUserByEmail(email);
-        if (customer.getEmail().equalsIgnoreCase(email)) {
-            return false;
-        } else {
-            try {
-                PreparedStatement updatePass = getDb().prepareStatement(update);
-                updatePass.execute();
-                return true;
-            } catch (SQLException ex) {
-                Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        return false;
-    }
-
+    @Override
     public Customer getUserByEmail(String email) {
         Customer customer = new Customer();
         String getPersonInfoByEmail = " SELECT * FROM persons WHERE email='" + email + "'";
         try {
-            Statement stmt = getDb().createStatement();
+            Statement stmt = db.createStatement();
             ResultSet rs = stmt.executeQuery(getPersonInfoByEmail);
             if (rs.next()) {
                 customer.setBirthDate(rs.getString("birth_date"));
@@ -146,14 +100,16 @@ public class Customer extends Person implements ICustomer {
                 customer.setPassword(rs.getString("password"));
                 customer.setPhoneNumber(rs.getString("phone_number"));
                 customer.setSurname(rs.getString("surname"));
+                customer.setActivationPersonnelId(rs.getInt("activation_personnel_id"));
+                customer.setActivationResult(rs.getBoolean("activation_result"));
+
             }
             String getCustomerInfoByEmail = "SELECT * FROM customers WHERE person_id='" + customer.getId() + "'";
 
             ResultSet rs2 = stmt.executeQuery(getCustomerInfoByEmail);
             if (rs2.next()) {
-                //  customer.setActivationPersonnel(rs2.getInt("activation_personnel_id"));
-                customer.setActivationResult(rs2.getBoolean("activation_result"));
                 customer.setIsBlocked(rs2.getBoolean("is_blocked"));
+                customer.setPerson_id(rs2.getInt("person_id"));
 //                customer.setRentedHouse(rs2.getString("rented_house_id"));
                 //        customer.setWallet(rs2.getInt("wallet_id"));
 
@@ -170,24 +126,8 @@ public class Customer extends Person implements ICustomer {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public Personnel getActivationPersonnel() {
-        return activationPersonnel;
-    }
-
     public List<Comment> getComments() {
         return comments;
-    }
-
-    public Connection getDb() {
-        return db;
-    }
-
-    public String getInsertionCustomer() {
-        return insertionCustomer;
-    }
-
-    public String getInsertionPerson() {
-        return insertionPerson;
     }
 
     public House getRentedHouse() {
@@ -198,36 +138,12 @@ public class Customer extends Person implements ICustomer {
         return wallet;
     }
 
-    public boolean isActivationResult() {
-        return activationResult;
-    }
-
-    public boolean isIsBlocked() {
+    public boolean getIsBlocked() {
         return isBlocked;
-    }
-
-    public void setActivationPersonnel(Personnel activationPersonnel) {
-        this.activationPersonnel = activationPersonnel;
-    }
-
-    public void setActivationResult(boolean activationResult) {
-        this.activationResult = activationResult;
     }
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public void setDb(Connection db) {
-        this.db = db;
-    }
-
-    public void setInsertionCustomer(String insertionCustomer) {
-        this.insertionCustomer = insertionCustomer;
-    }
-
-    public void setInsertionPerson(String insertionPerson) {
-        this.insertionPerson = insertionPerson;
     }
 
     public void setIsBlocked(boolean isBlocked) {
@@ -240,6 +156,14 @@ public class Customer extends Person implements ICustomer {
 
     public void setWallet(Wallet wallet) {
         this.wallet = wallet;
+    }
+
+    public int getPerson_id() {
+        return person_id;
+    }
+
+    public void setPerson_id(int person_id) {
+        this.person_id = person_id;
     }
 
 }

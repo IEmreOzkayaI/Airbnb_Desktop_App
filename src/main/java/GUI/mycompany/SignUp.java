@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import user.concretes.Customer;
+import user.concretes.HouseOwner;
 import user.concretes.Person;
 
 /**
@@ -29,8 +30,6 @@ public class SignUp extends javax.swing.JFrame {
      * Creates new form SignUp
      */
     Connection db;
-
-    String insertionHouseOwner = "INSERT INTO houseowners  VALUES(?,?,?,?,?,?)";
 
     public SignUp() {
         initComponents();
@@ -51,6 +50,7 @@ public class SignUp extends javax.swing.JFrame {
     private void initComponents() {
 
         gender = new javax.swing.ButtonGroup();
+        memberShipType = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -68,6 +68,9 @@ public class SignUp extends javax.swing.JFrame {
         birthDate = new javax.swing.JFormattedTextField();
         repeatOfPassword = new javax.swing.JPasswordField();
         password = new javax.swing.JPasswordField();
+        hirer = new javax.swing.JRadioButton();
+        homeOwner = new javax.swing.JRadioButton();
+        logo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -219,69 +222,109 @@ public class SignUp extends javax.swing.JFrame {
         password.setForeground(new java.awt.Color(255, 255, 255));
         password.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "PASSWORD", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
 
+        hirer.setBackground(new java.awt.Color(51, 51, 51));
+        memberShipType.add(hirer);
+        hirer.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        hirer.setForeground(new java.awt.Color(255, 255, 255));
+        hirer.setText("HIRER");
+        hirer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hirerActionPerformed(evt);
+            }
+        });
+
+        homeOwner.setBackground(new java.awt.Color(51, 51, 51));
+        memberShipType.add(homeOwner);
+        homeOwner.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        homeOwner.setForeground(new java.awt.Color(255, 255, 255));
+        homeOwner.setText("HOUSE OWNER");
+        homeOwner.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeOwnerActionPerformed(evt);
+            }
+        });
+
+        logo.setIcon(new javax.swing.ImageIcon("C:\\Users\\emrec\\OneDrive\\Belgeler\\NetBeansProjects\\OOP\\src\\main\\java\\img\\2993798_social media_airbnb_icon (2).png")); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(25, 25, 25)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(phoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(repeatOfPassword))
                     .addComponent(signUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(email, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phoneNumber)
+                            .addComponent(surname)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(identityNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(surname, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                                    .addComponent(name))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(email, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                                    .addComponent(password)))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(165, 165, 165)
+                                .addGap(33, 33, 33)
                                 .addComponent(male)
                                 .addGap(18, 18, 18)
-                                .addComponent(female))
+                                .addComponent(female)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(identityNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(birthDate, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(31, 31, 31))
+                                .addComponent(birthDate))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                                .addComponent(hirer)
+                                .addGap(18, 18, 18)
+                                .addComponent(homeOwner)
+                                .addGap(21, 21, 21)))))
+                .addGap(25, 25, 25))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logo)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(84, 84, 84)
+                .addContainerGap()
+                .addComponent(logo)
+                .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(64, 64, 64)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(surname, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(surname, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(65, 65, 65)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phoneNumber))
+                .addGap(68, 68, 68)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(repeatOfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(69, 69, 69)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(phoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-                    .addComponent(repeatOfPassword))
                 .addGap(71, 71, 71)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(identityNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(birthDate, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(female)
-                    .addComponent(male))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(31, 31, 31)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(homeOwner)
+                        .addComponent(hirer))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(female)
+                        .addComponent(male)))
+                .addGap(18, 18, 18)
                 .addComponent(signUp, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addGap(48, 48, 48))
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 80, 570, 640));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 40, 570, 680));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -324,45 +367,69 @@ public class SignUp extends javax.swing.JFrame {
     private void signUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpActionPerformed
         // TODO add your handling code here:
         Customer customer = new Customer();
+        HouseOwner houseowner = new HouseOwner();
         if (name.getText().isEmpty() || surname.getText().isEmpty() || email.getText().isEmpty() || password.getText().isEmpty() || repeatOfPassword.getText().isEmpty() || phoneNumber.getText().isEmpty() || identityNumber.getText().isEmpty() || birthDate.getText().isEmpty() || gender.getSelection() == null) {
             JOptionPane.showMessageDialog(null, "There exist missing field");
         } else {
             if (!isEmailFormatValid()) {
                 JOptionPane.showMessageDialog(null, "Email not valid");
-            }
-
-            else if (!password.getText().equals(repeatOfPassword.getText())) {
+            } else if (!password.getText().equals(repeatOfPassword.getText())) {
                 JOptionPane.showMessageDialog(null, "Passwords are not same");
-            }
-            else if (customer.emailExist(email.getText())) {
+            } else if (customer.emailExist(email.getText()) || houseowner.emailExist(email.getText())) {
                 JOptionPane.showMessageDialog(null, " Email already exist ! ");
-            }
-            else if (customer.identityExist(identityNumber.getText())) {
+            } else if (customer.identityExist(identityNumber.getText()) || houseowner.identityExist(identityNumber.getText())) {
                 JOptionPane.showMessageDialog(null, " User already exist ! ");
 
             } else { // No error so register user.
                 String pass = new String(password.getPassword());
-
-                customer.setBirthDate(birthDate.getText());
-                customer.setEmail(email.getText());
-                if (gender.getSelection().toString().equalsIgnoreCase("Male")) {
-                    customer.setGender("male");
+                if (homeOwner.isSelected()) {
+                    houseowner.setBirthDate(birthDate.getText());
+                    houseowner.setEmail(email.getText());
+                    if (male.isSelected()) {
+                        houseowner.setGender("male");
+                    } else {
+                        houseowner.setGender("female");
+                    }
+                    houseowner.setId(0);
+                    houseowner.setIdentityNumber(identityNumber.getText());
+                    houseowner.setName(name.getText());
+                    houseowner.setPassword(pass);
+                    houseowner.setPhoneNumber(phoneNumber.getText());
+                    houseowner.setSurname(surname.getText());
+                    houseowner.setActivationResult(false);
+                    houseowner.setActivationPersonnelId(0);
+                    if (houseowner.register(houseowner)) {
+                        JOptionPane.showMessageDialog(null, "Thanks For Join Us , Please Wait Personnel Validation");
+                        Home home = new Home();
+                        home.show();
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error! ");
+                    }
                 } else {
-                    customer.setGender("female");
-                }
-                customer.setId(0);
-                customer.setIdentityNumber(identityNumber.getText());
-                customer.setName(name.getText());
-                customer.setPassword(pass);
-                customer.setPhoneNumber(phoneNumber.getText());
-                customer.setSurname(surname.getText());
-                if (customer.register(customer)) {
-                    JOptionPane.showMessageDialog(null, "Thanks For Join Us , Please Wait Personnel Validation");
-                    Home home = new Home();
-                    home.show();
-                    this.dispose();
-                   } else {
-                    JOptionPane.showMessageDialog(null, "Error! ");
+                    customer.setBirthDate(birthDate.getText());
+                    customer.setEmail(email.getText());
+                    if (male.isSelected()) {
+                        customer.setGender("male");
+                    } else {
+                        customer.setGender("female");
+                    }
+                    customer.setId(0);
+                    customer.setIdentityNumber(identityNumber.getText());
+                    customer.setName(name.getText());
+                    customer.setPassword(pass);
+                    customer.setPhoneNumber(phoneNumber.getText());
+                    customer.setSurname(surname.getText());
+                    customer.setActivationResult(false);
+                    customer.setActivationPersonnelId(0);
+                    if (customer.register(customer)) {
+                        JOptionPane.showMessageDialog(null, "Thanks For Join Us , Please Wait Personnel Validation");
+                        Home home = new Home();
+                        home.show();
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error! ");
+                    }
                 }
 
             }
@@ -382,6 +449,14 @@ public class SignUp extends javax.swing.JFrame {
         Home home = new Home();
         home.show();
     }//GEN-LAST:event_turnHomeActionPerformed
+
+    private void hirerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hirerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_hirerActionPerformed
+
+    private void homeOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeOwnerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_homeOwnerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -430,13 +505,17 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JTextField email;
     private javax.swing.JRadioButton female;
     private javax.swing.ButtonGroup gender;
+    private javax.swing.JRadioButton hirer;
+    private javax.swing.JRadioButton homeOwner;
     private javax.swing.JTextField identityNumber;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel logo;
     private javax.swing.JRadioButton male;
+    private javax.swing.ButtonGroup memberShipType;
     private javax.swing.JTextField name;
     private javax.swing.JPasswordField password;
     private javax.swing.JTextField phoneNumber;

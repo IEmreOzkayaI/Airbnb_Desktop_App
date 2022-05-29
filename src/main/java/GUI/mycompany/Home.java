@@ -7,7 +7,11 @@ package GUI.mycompany;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import user.concretes.Customer;
+import user.concretes.HouseOwner;
+import user.concretes.Person;
+import user.concretes.Personnel;
 
 /**
  *
@@ -19,7 +23,11 @@ public class Home extends javax.swing.JFrame {
      * Creates new form Home2
      */
     static boolean isLogin = false;
+    private static Person person;
+    private static HouseOwner houseOwner;
     private static Customer customer;
+    private static Personnel personnel;
+    static boolean profileMenuOpen = false;
 
     public Home() {
         initComponents();
@@ -30,25 +38,67 @@ public class Home extends javax.swing.JFrame {
 
     }
 
+    public Home(boolean isLogin, HouseOwner houseOwner) {
+        initComponents();
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
+        this.houseOwner = houseOwner;
+        this.isLogin = isLogin;
+
+        if (isLogin) {
+            signUp.hide();
+            logIn.hide();
+            searchBar.setBounds(100, 8, 580, 41);
+            addAdvertisement.setBounds(725, 8, 180, 40);
+            profileMenu.setBounds(920, 8, 100, 40);
+            profileMenu.setText(houseOwner.getName().toUpperCase());
+
+            navbar.setPreferredSize(new Dimension(1049, 56));
+            this.navbar.add(searchBar);
+            this.navbar.add(profileMenu);
+            this.navbar.add(addAdvertisement);
+
+        }
+    }
+
+    public Home(boolean isLogin, Personnel personnel) {
+        initComponents();
+        Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
+        this.personnel = personnel;
+        this.isLogin = isLogin;
+
+        if (isLogin) {
+
+            PersonnelScreen pScreen = new PersonnelScreen(true, personnel);
+            pScreen.show();
+            this.dispose();
+
+        }
+    }
+
     public Home(boolean isLogin, Customer customer) {
         initComponents();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
+        this.customer = customer;
         this.isLogin = isLogin;
+
         if (isLogin) {
             signUp.hide();
             logIn.hide();
+            searchBar.setBounds(100, 8, 580, 41);
+            becameHouseOwner.setBounds(700, 8, 210, 40);
+            profileMenu.setBounds(920, 8, 100, 40);
+            profileMenu.setText(customer.getName().toUpperCase());
+
             navbar.setPreferredSize(new Dimension(1049, 56));
-            searchBar.setBounds(100, 8, 600, 41);
             this.navbar.add(searchBar);
-            this.navbar.add(profile);
+            this.navbar.add(profileMenu);
             this.navbar.add(becameHouseOwner);
-            this.remove(becameHouseOwner);
-            this.remove(profile);
-            profile.setBounds(900, 8, 100, 40);
-            profile.setText(customer.getName().toUpperCase());
-            becameHouseOwner.setBounds(775, 8, 100, 40);
 
         }
     }
@@ -62,15 +112,20 @@ public class Home extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        profile = new javax.swing.JButton();
         becameHouseOwner = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        profileDetail = new javax.swing.JPanel();
+        profile = new javax.swing.JButton();
+        wallet = new javax.swing.JButton();
+        exit = new javax.swing.JButton();
+        profileMenu = new javax.swing.JButton();
+        addAdvertisement = new javax.swing.JButton();
+        content = new javax.swing.JPanel();
+        leftSide = new javax.swing.JPanel();
         residenceFilter = new javax.swing.JButton();
         apartmentFilter = new javax.swing.JButton();
         villaFilter = new javax.swing.JButton();
         treeHouseFilter = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
+        rightSide = new javax.swing.JPanel();
         navbar = new javax.swing.JPanel();
         signUp = new javax.swing.JButton();
         logIn = new javax.swing.JButton();
@@ -78,67 +133,184 @@ public class Home extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         advertisementList = new javax.swing.JTable();
 
-        profile.setBackground(new java.awt.Color(51, 51, 51));
-        profile.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        profile.setForeground(new java.awt.Color(255, 255, 255));
-        profile.setText("Log In");
-        profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        profile.setDefaultCapable(false);
-        profile.setPreferredSize(new java.awt.Dimension(80, 40));
-        profile.setRequestFocusEnabled(false);
-        profile.setRolloverEnabled(false);
-        profile.setVerifyInputWhenFocusTarget(false);
-
         becameHouseOwner.setBackground(new java.awt.Color(153, 153, 153));
         becameHouseOwner.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         becameHouseOwner.setForeground(new java.awt.Color(255, 255, 255));
-        becameHouseOwner.setText("Sign Up");
+        becameHouseOwner.setText("Became HouseOwner");
         becameHouseOwner.setBorder(null);
         becameHouseOwner.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        becameHouseOwner.setPreferredSize(new java.awt.Dimension(80, 40));
+        becameHouseOwner.setPreferredSize(new java.awt.Dimension(210, 40));
         becameHouseOwner.setRequestFocusEnabled(false);
         becameHouseOwner.setRolloverEnabled(false);
         becameHouseOwner.setVerifyInputWhenFocusTarget(false);
+        becameHouseOwner.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                becameHouseOwnerMouseClicked(evt);
+            }
+        });
         becameHouseOwner.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 becameHouseOwnerActionPerformed(evt);
             }
         });
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1330, 800));
+        profileDetail.setBackground(new java.awt.Color(51, 51, 51));
+        profileDetail.setMinimumSize(new java.awt.Dimension(100, 124));
+        profileDetail.setPreferredSize(new java.awt.Dimension(100, 124));
 
-        jPanel2.setBackground(new java.awt.Color(255, 90, 95));
-        jPanel2.setPreferredSize(new java.awt.Dimension(220, 800));
+        profile.setBackground(new java.awt.Color(51, 51, 51));
+        profile.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        profile.setForeground(new java.awt.Color(255, 255, 255));
+        profile.setText("Profile");
+        profile.setBorder(null);
+        profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        profile.setDefaultCapable(false);
+        profile.setPreferredSize(new java.awt.Dimension(100, 40));
+        profile.setRequestFocusEnabled(false);
+        profile.setRolloverEnabled(false);
+        profile.setVerifyInputWhenFocusTarget(false);
+        profile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileActionPerformed(evt);
+            }
+        });
+
+        wallet.setBackground(new java.awt.Color(51, 51, 51));
+        wallet.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        wallet.setForeground(new java.awt.Color(255, 255, 255));
+        wallet.setText("Wallet");
+        wallet.setBorder(null);
+        wallet.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        wallet.setDefaultCapable(false);
+        wallet.setPreferredSize(new java.awt.Dimension(100, 40));
+        wallet.setRequestFocusEnabled(false);
+        wallet.setRolloverEnabled(false);
+        wallet.setVerifyInputWhenFocusTarget(false);
+        wallet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                walletActionPerformed(evt);
+            }
+        });
+
+        exit.setBackground(new java.awt.Color(51, 51, 51));
+        exit.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        exit.setForeground(new java.awt.Color(255, 255, 255));
+        exit.setText("Exit");
+        exit.setBorder(null);
+        exit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        exit.setDefaultCapable(false);
+        exit.setPreferredSize(new java.awt.Dimension(100, 40));
+        exit.setRequestFocusEnabled(false);
+        exit.setRolloverEnabled(false);
+        exit.setVerifyInputWhenFocusTarget(false);
+        exit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout profileDetailLayout = new javax.swing.GroupLayout(profileDetail);
+        profileDetail.setLayout(profileDetailLayout);
+        profileDetailLayout.setHorizontalGroup(
+            profileDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, profileDetailLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(profileDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(exit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wallet, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(profile, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(214, 214, 214))
+        );
+        profileDetailLayout.setVerticalGroup(
+            profileDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(profileDetailLayout.createSequentialGroup()
+                .addComponent(profile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(wallet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(exit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
+
+        profileDetail.getAccessibleContext().setAccessibleName("");
+
+        profileMenu.setBackground(new java.awt.Color(51, 51, 51));
+        profileMenu.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        profileMenu.setForeground(new java.awt.Color(255, 255, 255));
+        profileMenu.setBorder(null);
+        profileMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        profileMenu.setDefaultCapable(false);
+        profileMenu.setPreferredSize(new java.awt.Dimension(100, 40));
+        profileMenu.setRequestFocusEnabled(false);
+        profileMenu.setRolloverEnabled(false);
+        profileMenu.setVerifyInputWhenFocusTarget(false);
+        profileMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                profileMenuMouseClicked(evt);
+            }
+        });
+        profileMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileMenuActionPerformed(evt);
+            }
+        });
+
+        addAdvertisement.setBackground(new java.awt.Color(153, 153, 153));
+        addAdvertisement.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        addAdvertisement.setForeground(new java.awt.Color(255, 255, 255));
+        addAdvertisement.setText("+ Advertisement");
+        addAdvertisement.setBorder(null);
+        addAdvertisement.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        addAdvertisement.setDefaultCapable(false);
+        addAdvertisement.setPreferredSize(new java.awt.Dimension(143, 40));
+        addAdvertisement.setRequestFocusEnabled(false);
+        addAdvertisement.setRolloverEnabled(false);
+        addAdvertisement.setVerifyInputWhenFocusTarget(false);
+        addAdvertisement.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addAdvertisementMouseClicked(evt);
+            }
+        });
+        addAdvertisement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addAdvertisementActionPerformed(evt);
+            }
+        });
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        leftSide.setBackground(new java.awt.Color(255, 90, 95));
+        leftSide.setPreferredSize(new java.awt.Dimension(220, 800));
 
         residenceFilter.setBackground(new java.awt.Color(255, 90, 95));
-        residenceFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Residence", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        residenceFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Residence"));
 
         apartmentFilter.setBackground(new java.awt.Color(255, 90, 95));
-        apartmentFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Manor", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        apartmentFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Manor"));
 
         villaFilter.setBackground(new java.awt.Color(255, 90, 95));
-        villaFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Villa", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        villaFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Villa"));
 
         treeHouseFilter.setBackground(new java.awt.Color(255, 90, 95));
-        treeHouseFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tree House", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        treeHouseFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Tree House"));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout leftSideLayout = new javax.swing.GroupLayout(leftSide);
+        leftSide.setLayout(leftSideLayout);
+        leftSideLayout.setHorizontalGroup(
+            leftSideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(leftSideLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(leftSideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(treeHouseFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(villaFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(apartmentFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(residenceFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        leftSideLayout.setVerticalGroup(
+            leftSideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(leftSideLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(residenceFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47)
@@ -150,8 +322,8 @@ public class Home extends javax.swing.JFrame {
                 .addGap(60, 60, 60))
         );
 
-        jPanel3.setBackground(new java.awt.Color(51, 51, 51));
-        jPanel3.setPreferredSize(new java.awt.Dimension(1101, 800));
+        rightSide.setBackground(new java.awt.Color(51, 51, 51));
+        rightSide.setPreferredSize(new java.awt.Dimension(1101, 800));
 
         navbar.setBackground(new java.awt.Color(153, 153, 153));
         navbar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
@@ -208,7 +380,7 @@ public class Home extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, navbarLayout.createSequentialGroup()
                 .addGap(96, 96, 96)
                 .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
                 .addComponent(signUp, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addComponent(logIn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,20 +409,20 @@ public class Home extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(advertisementList);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout rightSideLayout = new javax.swing.GroupLayout(rightSide);
+        rightSide.setLayout(rightSideLayout);
+        rightSideLayout.setHorizontalGroup(
+            rightSideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rightSideLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(rightSideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(navbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        rightSideLayout.setVerticalGroup(
+            rightSideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rightSideLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(navbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
@@ -258,35 +430,32 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 1116, javax.swing.GroupLayout.PREFERRED_SIZE))
+        javax.swing.GroupLayout contentLayout = new javax.swing.GroupLayout(content);
+        content.setLayout(contentLayout);
+        contentLayout.setHorizontalGroup(
+            contentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contentLayout.createSequentialGroup()
+                .addComponent(leftSide, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rightSide, javax.swing.GroupLayout.PREFERRED_SIZE, 1116, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE))
-                .addGap(0, 2, Short.MAX_VALUE))
+        contentLayout.setVerticalGroup(
+            contentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(leftSide, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
+            .addComponent(rightSide, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
         );
 
-        jPanel2.getAccessibleContext().setAccessibleDescription("");
+        leftSide.getAccessibleContext().setAccessibleDescription("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -315,6 +484,100 @@ public class Home extends javax.swing.JFrame {
     private void becameHouseOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_becameHouseOwnerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_becameHouseOwnerActionPerformed
+
+    private void profileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "profile clicked");
+
+    }//GEN-LAST:event_profileActionPerformed
+
+    private void walletActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_walletActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "wallet clicked");
+    }//GEN-LAST:event_walletActionPerformed
+
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
+        // TODO add your handling code here:
+       this.dispose();
+       Home home = new Home();
+       home.show();
+
+    }//GEN-LAST:event_exitActionPerformed
+
+    private void profileMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileMenuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_profileMenuActionPerformed
+
+    private void profileMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profileMenuMouseClicked
+        // TODO add your handling code here:
+        if (profileMenuOpen) {
+            this.profileDetail.hide();
+            this.rightSide.remove(profileDetail);
+            profileMenuOpen = false;
+            jScrollPane1.setVisible(true);
+
+        } else {
+            this.rightSide.add(profileDetail);
+            profileDetail.show();
+            this.profileDetail.add(wallet);
+            this.profileDetail.add(profile);
+            this.profileDetail.add(exit);
+
+            profileDetail.setBounds(947, 85, 100, 120);
+            profile.setBounds(0, 0, 100, 40);
+            wallet.setBounds(0, 41, 100, 40);
+            exit.setBounds(0, 82, 100, 40);
+            jScrollPane1.setVisible(false);
+            profileMenuOpen = true;
+        }
+    }//GEN-LAST:event_profileMenuMouseClicked
+
+    private void becameHouseOwnerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_becameHouseOwnerMouseClicked
+        // TODO add your handling code here:
+
+        // houseowner tablosuna aktarılacak tüm data . 
+        int result = JOptionPane.showConfirmDialog(null, "Do you want to be a House Owner");
+
+        if (result == 0) {
+            HouseOwner houseOwner = new HouseOwner();
+            houseOwner.setBirthDate(customer.getBirthDate());
+            houseOwner.setEmail(customer.getEmail());
+            houseOwner.setGender(customer.getGender());
+            houseOwner.setId(customer.getId());
+            houseOwner.setIdentityNumber(customer.getIdentityNumber());
+            houseOwner.setName(customer.getName());
+            houseOwner.setPassword(customer.getPassword());
+            houseOwner.setPhoneNumber(customer.getPhoneNumber());
+            houseOwner.setSurname(customer.getSurname());
+            houseOwner.setComments(customer.getComments());
+            houseOwner.setActivationPersonnelId(customer.getActivationPersonnelId());
+            houseOwner.setRentedHouse(customer.getRentedHouse());
+            houseOwner.setWallet(customer.getWallet());
+            houseOwner.setActivationResult(true);
+            houseOwner.setIsBlocked(false);
+            houseOwner.registerFromCustomer(houseOwner);
+            JOptionPane.showMessageDialog(null, "Welcome " + customer.getName().toUpperCase() + " . Now you can rent your houses.");
+            this.dispose();
+            Home home = new Home(true, houseOwner);
+            home.show();
+        }
+        if (result == 1) {
+            JOptionPane.showMessageDialog(null, "Well we can't wait to see you among us");
+
+        }
+    }//GEN-LAST:event_becameHouseOwnerMouseClicked
+
+    private void addAdvertisementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAdvertisementActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addAdvertisementActionPerformed
+
+    private void addAdvertisementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addAdvertisementMouseClicked
+        // TODO add your handling code here:
+        AdvertisementAdd addAdvertismeent = new AdvertisementAdd(this.houseOwner);
+        this.dispose();
+        addAdvertismeent.show();
+        
+    }//GEN-LAST:event_addAdvertisementMouseClicked
 
     /**
      * @param args the command line arguments
@@ -347,30 +610,33 @@ public class Home extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                if (isLogin) {
-                    new Home(isLogin, customer).setVisible(true);
-                } else {
-                    new Home().setVisible(true);
-                }
+
+                new Home().setVisible(true);
+
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addAdvertisement;
     private javax.swing.JTable advertisementList;
     private javax.swing.JButton apartmentFilter;
     private javax.swing.JButton becameHouseOwner;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel content;
+    private javax.swing.JButton exit;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel leftSide;
     private javax.swing.JButton logIn;
     private javax.swing.JPanel navbar;
     private javax.swing.JButton profile;
+    private javax.swing.JPanel profileDetail;
+    private javax.swing.JButton profileMenu;
     private javax.swing.JButton residenceFilter;
+    private javax.swing.JPanel rightSide;
     private javax.swing.JTextField searchBar;
     private javax.swing.JButton signUp;
     private javax.swing.JButton treeHouseFilter;
     private javax.swing.JButton villaFilter;
+    private javax.swing.JButton wallet;
     // End of variables declaration//GEN-END:variables
 }

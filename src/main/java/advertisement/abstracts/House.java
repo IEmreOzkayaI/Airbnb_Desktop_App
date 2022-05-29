@@ -4,6 +4,15 @@
  */
 package advertisement.abstracts;
 
+import advertisement.concretes.Advertisement;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import user.concretes.HouseOwner;
 
 /**
@@ -14,25 +23,27 @@ public abstract class House {
 
     private int id;
     private int advertisementId;
-    private HouseOwner houseOwnerId;
-    private int price;
+    private int houseOwnerId;
     private String roomNumber;
     private boolean hasVehiclePark;
     private String heating;
     private String location;
     private String shortDescription;
     private String houseImage;
+    Connection db = Singleton.SingletonConnection.getCon();
+    PreparedStatement pst;
 
     public House() {
     }
 
-    public abstract void create(int houseOwnerId, int advertisementId);
+    public abstract void create( File[] imageFiles, String[] imagePaths);
 
-    public abstract void update(int houseOwnerId, int advertisementId);
+    public abstract void update(File[] imageFiles, String[] imagePaths);
 
-    public abstract void delete(int houseOwnerId, int advertisementId);
+    public abstract void delete(File[] imageFiles, String[] imagePaths);
 
-    public abstract void rent(int houseOwnerId, int advertisementId);
+    public abstract void rent( File[] imageFiles, String[] imagePaths);
+    
 
     public int getAdvertisementId() {
         return advertisementId;
@@ -46,7 +57,7 @@ public abstract class House {
         return houseImage;
     }
 
-    public HouseOwner getHouseOwnerId() {
+    public int getHouseOwnerId() {
         return houseOwnerId;
     }
 
@@ -56,10 +67,6 @@ public abstract class House {
 
     public String getLocation() {
         return location;
-    }
-
-    public int getPrice() {
-        return price;
     }
 
     public String getRoomNumber() {
@@ -90,7 +97,7 @@ public abstract class House {
         this.houseImage = houseImage;
     }
 
-    public void setHouseOwnerId(HouseOwner houseOwnerId) {
+    public void setHouseOwnerId(int houseOwnerId) {
         this.houseOwnerId = houseOwnerId;
     }
 
@@ -100,10 +107,6 @@ public abstract class House {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public void setRoomNumber(String roomNumber) {

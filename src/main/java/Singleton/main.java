@@ -7,6 +7,7 @@ package Singleton;
 import GUI.mycompany.Home;
 import GUI.mycompany.SignUp;
 import java.sql.Connection;
+import user.concretes.Customer;
 
 
 /**
@@ -15,7 +16,8 @@ import java.sql.Connection;
  */
 public class main {
     public static void main(String[] args) {
-       Home home = new Home();
+     // Home home = new Home(true,new Customer());
+      Home home = new Home();
        home.show();
     }
 }

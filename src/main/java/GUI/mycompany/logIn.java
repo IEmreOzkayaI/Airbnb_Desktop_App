@@ -15,6 +15,10 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import user.abstracts.IPerson;
+import user.concretes.HouseOwner;
+import user.concretes.Person;
+import user.concretes.Personnel;
 
 /**
  *
@@ -127,7 +131,6 @@ public class LogIn extends javax.swing.JFrame {
         logIn.setText("Log In");
         logIn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logIn.setDefaultCapable(false);
-        logIn.setOpaque(true);
         logIn.setRequestFocusEnabled(false);
         logIn.setRolloverEnabled(false);
         logIn.setVerifyInputWhenFocusTarget(false);
@@ -158,7 +161,6 @@ public class LogIn extends javax.swing.JFrame {
         password.setBackground(new java.awt.Color(51, 51, 51));
         password.setForeground(new java.awt.Color(255, 255, 255));
         password.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "PASSWORD", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
-        password.setPreferredSize(new java.awt.Dimension(64, 42));
         password.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 passwordActionPerformed(evt);
@@ -223,7 +225,26 @@ public class LogIn extends javax.swing.JFrame {
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
         Customer customer = new Customer().getUserByEmail(email.getText());
-        if (customer.isActivationResult()) {
+        HouseOwner houseOwner = new HouseOwner().getUserByEmail(email.getText());
+        Personnel personnel = new Personnel().getUserByEmail(email.getText());
+        if (customer.getPerson_id() == 0 && houseOwner.getPerson_id() != 0) {
+            control(houseOwner.isActivationResult(), houseOwner);
+
+        } else if (customer.getPerson_id() != 0 && houseOwner.getPerson_id() == 0) {
+
+            control(customer.isActivationResult(), customer);
+
+        } else if (personnel.getPerson_id() != 0) {
+            control(personnel);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "There is not membership for this email");
+
+        }
+    }//GEN-LAST:event_logInActionPerformed
+
+    private void control(boolean result, HouseOwner houseOwner) {
+        if (result) {
             if (email.getText() == null || password.getText() == null) {
                 JOptionPane.showMessageDialog(null, "There exist missing field");
             } else {
@@ -233,7 +254,7 @@ public class LogIn extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Email or password is not valid");
                 } else {
                     this.dispose();
-                    Home home = new Home(true,customer);
+                    Home home = new Home(true, houseOwner);
                     home.show();
                 }
             }
@@ -241,9 +262,46 @@ public class LogIn extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Your account is examining , Thanks for your patience ");
 
         }
+    }
 
-    }//GEN-LAST:event_logInActionPerformed
+    private void control(Personnel personnel) {
 
+        if (email.getText() == null || password.getText() == null) {
+            JOptionPane.showMessageDialog(null, "There exist missing field");
+        } else {
+            if (!isEmailFormatValid()) {
+                JOptionPane.showMessageDialog(null, "Email format is not valid");
+            } else if (!userIsCurrent()) {
+                JOptionPane.showMessageDialog(null, "Email or password is not valid");
+            } else {
+                this.dispose();
+                PersonnelScreen pScreen = new PersonnelScreen(true,personnel);
+                pScreen.show();
+            }
+        }
+
+    }
+
+    private void control(boolean result, Customer customer) {
+        if (result) {
+            if (email.getText() == null || password.getText() == null) {
+                JOptionPane.showMessageDialog(null, "There exist missing field");
+            } else {
+                if (!isEmailFormatValid()) {
+                    JOptionPane.showMessageDialog(null, "Email format is not valid");
+                } else if (!userIsCurrent()) {
+                    JOptionPane.showMessageDialog(null, "Email or password is not valid");
+                } else {
+                    this.dispose();
+                    Home home = new Home(true, customer);
+                    home.show();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Your account is examining , Thanks for your patience ");
+
+        }
+    }
     private void logInMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logInMouseClicked
         // TODO add your handling code here:
 

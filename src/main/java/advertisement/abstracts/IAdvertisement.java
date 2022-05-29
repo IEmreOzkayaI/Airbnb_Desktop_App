@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface IAdvertisement {
 
-    void create(Advertisement advertisement, int ownerId);
+    void create();
 
     void update(Advertisement advertisement, int ownerId);
 
