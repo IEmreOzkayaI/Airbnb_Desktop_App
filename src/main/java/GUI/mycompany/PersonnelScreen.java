@@ -63,16 +63,7 @@ public class PersonnelScreen extends javax.swing.JFrame {
         this.isLogin = isLogin;
         if (isLogin) {
             profileMenu.setText(personnel.getName().toUpperCase());
-            Advertisement ad = new Advertisement();
-            List<Advertisement> advertisementList = ad.getAllAdvertisementsIsActiveFalse();
-
-            for (Advertisement advertisement : advertisementList) {
-
-                Object tbData[] = {advertisement.getAdvertisementName(), advertisement.getAdvertisementType()};
-                DefaultTableModel tblModel = (DefaultTableModel) advertisements.getModel();
-                tblModel.addRow(tbData);
-            }
-            isAdvertisementsListed = true;
+            getAdvertisementDatas();
         }
     }
 
@@ -189,7 +180,7 @@ public class PersonnelScreen extends javax.swing.JFrame {
 
         persons.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         persons.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        persons.setRowHeight(30);
+        persons.setRowHeight(50);
         persons.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -399,21 +390,38 @@ public class PersonnelScreen extends javax.swing.JFrame {
 
         advertisements.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         advertisements.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        advertisements.setRowHeight(50);
         advertisements.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Name", "Type"
+                "Name", "Type", "Heating", "Room Number", "Price", "Address", "Short Description"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false, true, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         advertisements.getTableHeader().setReorderingAllowed(false);
+        advertisements.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                advertisementsMouseClicked(evt);
+            }
+        });
         advertisementScrool.setViewportView(advertisements);
         if (advertisements.getColumnModel().getColumnCount() > 0) {
             advertisements.getColumnModel().getColumn(0).setResizable(false);
-            advertisements.getColumnModel().getColumn(0).setHeaderValue("Name");
             advertisements.getColumnModel().getColumn(1).setResizable(false);
-            advertisements.getColumnModel().getColumn(1).setHeaderValue("Surname");
+            advertisements.getColumnModel().getColumn(2).setResizable(false);
+            advertisements.getColumnModel().getColumn(3).setResizable(false);
+            advertisements.getColumnModel().getColumn(4).setResizable(false);
+            advertisements.getColumnModel().getColumn(5).setResizable(false);
+            advertisements.getColumnModel().getColumn(6).setResizable(false);
         }
 
         javax.swing.GroupLayout personnelScreenLayout = new javax.swing.GroupLayout(personnelScreen);
@@ -517,50 +525,36 @@ public class PersonnelScreen extends javax.swing.JFrame {
     private void AdvertisementsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdvertisementsActionPerformed
         // TODO add your handling code here:
 
+        personScrool.hide();
+        personnelScreen.add(advertisementScrool);
+
+        advertisementScrool.show();
+        advertisementScrool.setBounds(30, 100, 1320, 650);
+        advertisements.setBounds(0, 0, 1320, 650);
+        getAdvertisementDatas();
+
+    }//GEN-LAST:event_AdvertisementsActionPerformed
+
+    private void getAdvertisementDatas() {
         if (!isAdvertisementsListed) {
             isPersonListed = false;
-
-            personScrool.hide();
-            personnelScreen.add(advertisementScrool);
-
-            advertisementScrool.show();
-            advertisementScrool.setBounds(30, 100, 1320, 650);
-            advertisements.setBounds(0, 0, 1320, 650);
-
             Advertisement ad = new Advertisement();
             List<Advertisement> advertisementList = ad.getAllAdvertisementsIsActiveFalse();
+            
             DefaultTableModel tblModel = (DefaultTableModel) advertisements.getModel();
             tblModel.setRowCount(0);
 
             for (Advertisement advertisement : advertisementList) {
 
-                Object tbData[] = {advertisement.getAdvertisementName(), advertisement.getAdvertisementType()};
+                Object tbData[] = {advertisement.getId(), advertisement.getAdvertisementName(), advertisement.getAdvertisementType(), advertisement.getHouse().getHeating(), advertisement.getHouse().getRoomNumber(),
+                    advertisement.getPrice(), advertisement.getHouse().getLocation(), advertisement.getHouse().getShortDescription()};
 
                 tblModel.addRow(tbData);
             }
             isAdvertisementsListed = true;
         }
+    }
 
-    }//GEN-LAST:event_AdvertisementsActionPerformed
-
-//    private ImageIcon getHouseImage(int houseId) {
-//        try {
-//            st = db.createStatement();
-//            rs = st.executeQuery(Singleton.SingletonConnection.getImageByHouseId + "'" + houseId + "'");
-//            while (rs.next()) {
-//                byte[] imagedata = rs.getBytes("image_file");
-//                ImageIcon imageIcon = new ImageIcon(imagedata);
-//                Image mm = imageIcon.getImage();
-//                Image mm2 = mm.getScaledInstance(178, 50, Image.SCALE_SMOOTH);
-//                ImageIcon image = new ImageIcon(mm2);
-//                return image;
-//            }
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(PersonnelScreen.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
-//    }
     private void persons1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_persons1ActionPerformed
         advertisementScrool.hide();
         personnelScreen.add(personScrool);
@@ -592,22 +586,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_persons2ActionPerformed
 
-    private void validateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_validateMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_validateMouseClicked
-
-    private void validateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_validateActionPerformed
-
-    private void rejectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rejectMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rejectMouseClicked
-
-    private void rejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rejectActionPerformed
-
     private void personsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_personsMouseClicked
         // TODO add your handling code here:
         int index = persons.getSelectedRow();
@@ -621,23 +599,63 @@ public class PersonnelScreen extends javax.swing.JFrame {
             try {
                 pst = db.prepareStatement(updatePersonValidation);
                 pst.execute();
-                isPersonListed=false;
+                isPersonListed = false;
                 getPersonsDatas();
+
             } catch (SQLException ex) {
-                Logger.getLogger(PersonnelScreen.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PersonnelScreen.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
 
-        } else if(result==1){
-               try {
+        } else if (result == 1) {
+            try {
                 pst = db.prepareStatement(deletePerson);
                 pst.execute();
-                isPersonListed=false;
+                isPersonListed = false;
                 getPersonsDatas();
+
             } catch (SQLException ex) {
-                Logger.getLogger(PersonnelScreen.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PersonnelScreen.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_personsMouseClicked
+
+    private void advertisementsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advertisementsMouseClicked
+        // TODO add your handling code here:
+        int index = advertisements.getSelectedRow();
+        TableModel model = advertisements.getModel();
+        String id = model.getValueAt(index, 0).toString();
+        Advertisement ad = new Advertisement();
+
+        int result = JOptionPane.showConfirmDialog(null, "Do you want to Validate");
+        if (result == 0) {
+            ad.validateAdvertisement(personnel, Integer.parseInt(id));
+            isAdvertisementsListed = false;
+            getAdvertisementDatas();
+        } else if (result == 1) {
+            ad.delete(Integer.parseInt(id));
+            isAdvertisementsListed = false;
+            getAdvertisementDatas();
+
+        }
+    }//GEN-LAST:event_advertisementsMouseClicked
+
+    private void validateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_validateActionPerformed
+
+    private void validateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_validateMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_validateMouseClicked
+
+    private void rejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rejectActionPerformed
+
+    private void rejectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rejectMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rejectMouseClicked
 
     /**
      * @param args the command line arguments
@@ -653,16 +671,24 @@ public class PersonnelScreen extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PersonnelScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PersonnelScreen.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PersonnelScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PersonnelScreen.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PersonnelScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PersonnelScreen.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PersonnelScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PersonnelScreen.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>

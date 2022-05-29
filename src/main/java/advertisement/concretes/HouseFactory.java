@@ -34,4 +34,25 @@ public class HouseFactory {
         }
         return null;
     }
+        public House getHouse( String advertisement_Type) {
+        String advertisementType = advertisement_Type;
+        if (advertisementType.equalsIgnoreCase("apartment")) {
+             Apartment apartment = new Apartment();
+           return apartment;
+            
+        }
+        if (advertisementType.equalsIgnoreCase("manor")) {
+            Manor manor = new Manor();
+            return manor;
+        }
+        if (advertisementType.equalsIgnoreCase("tree house")) {
+            TreeHouse treehouse = new TreeHouse();
+            return treehouse;
+        }
+        if (advertisementType.equalsIgnoreCase("villa")) {
+            Villa villa = new Villa();
+            return villa;
+        }
+        return null;
+    }
 }

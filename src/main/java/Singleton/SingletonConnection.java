@@ -27,7 +27,8 @@ public class SingletonConnection {
     public static String insertionHouseImages = "INSERT INTO house_images VALUES(?,?,?,?)";
     public static String getAllAdvertisementsIsActiveFalse = "SELECT * FROM advertisements WHERE activation_result=false";
     public static String getAllPersonIsActiveFalse = "SELECT * FROM persons WHERE activation_result=false";
-  
+    public static String getHouseById = "SELECT * FROM houses WHERE id=";
+
     private SingletonConnection() {
         getCon();
     }

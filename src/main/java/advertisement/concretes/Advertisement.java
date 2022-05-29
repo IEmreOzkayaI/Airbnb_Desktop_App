@@ -4,7 +4,9 @@
  */
 package advertisement.concretes;
 
+import GUI.mycompany.PersonnelScreen;
 import Singleton.SingletonConnection;
+import advertisement.abstracts.House;
 import advertisement.abstracts.IAdvertisement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import user.concretes.Personnel;
 
 /**
  *
@@ -25,7 +28,7 @@ public class Advertisement implements IAdvertisement {
 
     private int id;
     private int houseOwnerId;
-    private int houseId;
+    private House house;
     private int price;
     private String advertisementName;
     private String advertisementType;
@@ -38,6 +41,7 @@ public class Advertisement implements IAdvertisement {
     PreparedStatement pst;
     Statement st;
     ResultSet rs;
+    HouseFactory houseFactory = new HouseFactory();
 
     @Override
     public void create() {
@@ -45,7 +49,7 @@ public class Advertisement implements IAdvertisement {
             pst = db.prepareStatement(Singleton.SingletonConnection.insertionAdvertisement);
             pst.setInt(1, 0);
             pst.setInt(2, getHouseOwnerId());
-            pst.setInt(3, getHouseId());
+            pst.setInt(3, getHouse().getId());
             pst.setString(4, getAdvertisementName());
             pst.setString(5, getAdvertisementType());
             pst.setInt(6, 0);
@@ -66,12 +70,30 @@ public class Advertisement implements IAdvertisement {
 
     @Override
     public void delete(int advertisementId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String deleteAdvertisement = "DELETE FROM advertisements WHERE id='" + advertisementId + "'";
+        try {
+            pst = db.prepareStatement(deleteAdvertisement);
+            pst.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PersonnelScreen.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @Override
-    public void validateAdvertisement(Advertisement advertisement) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void validateAdvertisement(Personnel personnel, int advertisementId) {
+        String updateAdvertisementValidation = "UPDATE advertisements SET activation_result=true , activation_personnel_id='" + personnel.getPerson_id() + "' WHERE id='" + advertisementId + "'";
+        try {
+            pst = db.prepareStatement(updateAdvertisementValidation);
+            pst.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PersonnelScreen.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @Override
@@ -80,13 +102,9 @@ public class Advertisement implements IAdvertisement {
     }
 
     @Override
-    public List<Advertisement> getAllAdvertisements() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
     public List<Advertisement> getAllAdvertisementsIsActiveFalse() {
-        List<Advertisement> list = new ArrayList<Advertisement>();
+        List<Advertisement> list = new ArrayList<>();
+
         try {
             st = db.createStatement();
             rs = st.executeQuery(SingletonConnection.getAllAdvertisementsIsActiveFalse);
@@ -94,13 +112,28 @@ public class Advertisement implements IAdvertisement {
                 Advertisement ad = new Advertisement();
                 ad.setId(rs.getInt("id"));
                 ad.setHouseOwnerId(rs.getInt("person_id"));
-                ad.setHouseId(rs.getInt("house_id"));
                 ad.setAdvertisementName(rs.getString("advertisement_name"));
-                ad.setAdvertisementType(rs.getString("advertisement_type"));
+                String type = rs.getString("advertisement_type");
+                ad.setAdvertisementType(type);
                 ad.setActivationPersonnelId(rs.getInt("activation_personnel_id"));
                 ad.setActivationResult(rs.getBoolean("activation_result"));
                 ad.setCalendar(rs.getDate("calendar"));
                 ad.setPrice(rs.getInt("price"));
+                Statement st2 = db.createStatement();
+                ResultSet rs2 = st2.executeQuery(SingletonConnection.getHouseById + "'" + rs.getInt("house_id") + "'");
+                House house = houseFactory.getHouse(type);
+                while (rs2.next()) {
+                    house.setId(rs2.getInt("id"));
+                    house.setHasVehiclePark(rs2.getBoolean("has_vehicle_park"));
+                    house.setRoomNumber(rs2.getString("room_number"));
+                    house.setHeating(rs2.getString("heating"));
+                    house.setHouseOwnerId(rs2.getInt("person_id"));
+                    house.setLocation(rs2.getString("address"));
+                    house.setShortDescription(rs2.getString("short_description"));
+//                    house.setHouseImage(rs2.getString("address"));
+
+                }
+                ad.setHouse(house);
                 list.add(ad);
             }
 
@@ -108,10 +141,6 @@ public class Advertisement implements IAdvertisement {
             Logger.getLogger(Advertisement.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
-    }
-
-    public void getAdvertisementImages() {
-        
     }
 
     @Override
@@ -149,8 +178,8 @@ public class Advertisement implements IAdvertisement {
         return comments;
     }
 
-    public int getHouseId() {
-        return houseId;
+    public House getHouse() {
+        return house;
     }
 
     public int getHouseOwnerId() {
@@ -193,8 +222,8 @@ public class Advertisement implements IAdvertisement {
         this.comments = comments;
     }
 
-    public void setHouseId(int houseId) {
-        this.houseId = houseId;
+    public void setHouse(House house) {
+        this.house = house;
     }
 
     public void setHouseOwnerId(int houseOwnerId) {

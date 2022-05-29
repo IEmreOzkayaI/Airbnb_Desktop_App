@@ -22,7 +22,6 @@ import user.concretes.HouseOwner;
 public abstract class House {
 
     private int id;
-    private int advertisementId;
     private int houseOwnerId;
     private String roomNumber;
     private boolean hasVehiclePark;
@@ -44,10 +43,6 @@ public abstract class House {
 
     public abstract void rent( File[] imageFiles, String[] imagePaths);
     
-
-    public int getAdvertisementId() {
-        return advertisementId;
-    }
 
     public String getHeating() {
         return heating;
@@ -81,9 +76,6 @@ public abstract class House {
         return hasVehiclePark;
     }
 
-    public void setAdvertisementId(int advertisementId) {
-        this.advertisementId = advertisementId;
-    }
 
     public void setHasVehiclePark(boolean hasVehiclePark) {
         this.hasVehiclePark = hasVehiclePark;

@@ -6,6 +6,7 @@ package advertisement.abstracts;
 
 import advertisement.concretes.Advertisement;
 import java.util.List;
+import user.concretes.Personnel;
 
 /**
  *
@@ -19,11 +20,9 @@ public interface IAdvertisement {
 
     void delete(int advertisementId);
 
-    void validateAdvertisement(Advertisement advertisement);
+    public void validateAdvertisement(Personnel personnel, int advertisementId);
 
     int totalPrice(int day, int customerNumber);
-
-    List<Advertisement> getAllAdvertisements();
 
     List<Advertisement> getAllAdvertisementsIsActiveFalse();
 

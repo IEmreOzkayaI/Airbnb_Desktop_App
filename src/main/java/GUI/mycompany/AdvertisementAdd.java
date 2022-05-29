@@ -452,7 +452,6 @@ public class AdvertisementAdd extends javax.swing.JFrame {
         } else {
             HouseFactory houseFactory = new HouseFactory();
             House house = houseFactory.createHouse(advertisementType.getSelectedItem().toString(), files, paths);
-            house.setAdvertisementId(0);
             if (yesPark.isSelected()) {
                 house.setHasVehiclePark(true);
             } else {
@@ -474,7 +473,7 @@ public class AdvertisementAdd extends javax.swing.JFrame {
             advertisement.setAdvertisementType(advertisementType.getSelectedItem().toString());
             advertisement.setCalendar(new Date(1, 1, 1));
             advertisement.setComments(null);
-            advertisement.setHouseId(house.getId());
+            advertisement.setHouse(house);
             advertisement.setHouseOwnerId(houseOwner.getId());
             advertisement.setId(0);
             String[] price = dailyPrice.getText().split("\\.");
