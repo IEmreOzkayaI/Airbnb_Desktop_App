@@ -446,8 +446,7 @@ public class AdvertisementAdd extends javax.swing.JFrame {
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
         // TODO add your handling code here:
-        if (advertisementName.getText().isEmpty() || dailyPrice.getText().isEmpty() || address.getText().isEmpty() || shortDescription.getText().isEmpty()) {
-//            || image1.getIcon() == null || image2.getIcon() == null || image3.getIcon() == null || image4.getIcon() == null || image5.getIcon() == null || image6.getIcon() == null
+        if (advertisementName.getText().isEmpty() || dailyPrice.getText().isEmpty() || address.getText().isEmpty() || shortDescription.getText().isEmpty()|| image1.getIcon() == null || image2.getIcon() == null || image3.getIcon() == null || image4.getIcon() == null || image5.getIcon() == null || image6.getIcon() == null) {
             JOptionPane.showMessageDialog(null, "Please Fill All Fields");
         } else {
             HouseFactory houseFactory = new HouseFactory();

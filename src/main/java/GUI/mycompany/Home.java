@@ -440,14 +440,14 @@ public class Home extends javax.swing.JFrame {
         tblAdvertisements.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         tblAdvertisements.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, "test", "test", "test", "test", "test", "test"}
+                {null, null, "test", "test", "test", "test", "test", "test"}
             },
             new String [] {
-                "Name", "Type", "Heating", "Room Number", "Price", "Adress", "Short Description"
+                "Image", "Name", "Type", "Heating", "Room Number", "Price", "Adress", "Short Description"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -465,6 +465,7 @@ public class Home extends javax.swing.JFrame {
             tblAdvertisements.getColumnModel().getColumn(4).setResizable(false);
             tblAdvertisements.getColumnModel().getColumn(5).setResizable(false);
             tblAdvertisements.getColumnModel().getColumn(6).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(7).setResizable(false);
         }
 
         javax.swing.GroupLayout rightSideLayout = new javax.swing.GroupLayout(rightSide);

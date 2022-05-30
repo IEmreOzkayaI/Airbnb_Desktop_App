@@ -38,7 +38,7 @@ public class SingletonConnection {
     public static Connection getCon() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/airbnb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "12345");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localHost:3306/air_bnb", "root", "kaSaba.2001");
 
         } catch (Exception e) {
             System.out.println(e);
