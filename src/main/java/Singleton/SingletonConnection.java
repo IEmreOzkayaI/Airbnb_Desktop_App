@@ -30,6 +30,10 @@ public class SingletonConnection {
     public static String getAllPersonIsActiveFalse = "SELECT * FROM persons WHERE activation_result=false";
     public static String getHouseById = "SELECT * FROM houses WHERE id=";
     public static String getHouseIconImg="SELECT * FROM house_images WHERE house_id=";
+    public static String getAdvertisementById="SELECT * FROM advertisements WHERE id=";
+    public static String getCommentsById="SELECT * FROM comments WHERE advertisement_id=";
+    public static String getPersonById="SELECT * FROM persons WHERE id=";
+    public static String insertComment="INSERT INTO comments VALUES(?,?,?,?,?)";
 
     private SingletonConnection() {
         getCon();
@@ -38,7 +42,7 @@ public class SingletonConnection {
     public static Connection getCon() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localHost:3306/air_bnb", "root", "kaSaba.2001");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localHost:3306/airbnb", "root", "12345");
 
         } catch (Exception e) {
             System.out.println(e);

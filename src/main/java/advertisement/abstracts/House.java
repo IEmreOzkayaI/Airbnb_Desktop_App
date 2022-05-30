@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import user.concretes.HouseOwner;
@@ -20,7 +21,7 @@ import user.concretes.HouseOwner;
  * @author EmreOzkaya
  */
 public abstract class House {
-
+    private ArrayList<byte[]> images=new ArrayList();
     private int id;
     private int houseOwnerId;
     private String roomNumber;
@@ -109,4 +110,18 @@ public abstract class House {
         this.shortDescription = shortDescription;
     }
 
+    /**
+     * @return the images
+     */
+    public ArrayList<byte[]> getImages() {
+        return images;
+    }
+
+    /**
+     * @param images the images to set
+     */
+    public void setImages(ArrayList<byte[]> images) {
+        this.images = images;
+    }
+    
 }

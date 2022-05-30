@@ -4,8 +4,18 @@
  */
 package GUI.mycompany;
 
+import advertisement.abstracts.House;
+import advertisement.concretes.Advertisement;
+import advertisement.concretes.Comment;
+import advertisement.concretes.HouseFactory;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,11 +26,70 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
     /**
      * Creates new form advertisementDetailPage
      */
+    DefaultTableModel dfmodel = new DefaultTableModel();
+    private static int advertisementId;
+    private static int houseId;
+    private static int personId;
+    ArrayList<byte[]> images = new ArrayList();
+    ArrayList<Comment> commentList = new ArrayList();
+    Advertisement ad = new Advertisement();
+    PreparedStatement pst;
+
+    public void viewAdvertisementDetails(int advertisementId, int houseId, int personId) {
+        contentScroll.getVerticalScrollBar().setUnitIncrement(20);
+        this.advertisementId = advertisementId;
+        this.houseId = houseId;
+        this.personId = personId;
+        ad = ad.showDetailedInfo(advertisementId);
+        images = ad.getHouse().getImages();
+        Image img = Toolkit.getDefaultToolkit().createImage(images.get(0)).getScaledInstance(178, 135, Image.SCALE_SMOOTH);
+        ImageIcon imgicn = new ImageIcon(img);
+        image1.setIcon(imgicn);
+        img = Toolkit.getDefaultToolkit().createImage(images.get(1)).getScaledInstance(178, 135, Image.SCALE_SMOOTH);
+        imgicn = new ImageIcon(img);
+        image2.setIcon(imgicn);
+        img = Toolkit.getDefaultToolkit().createImage(images.get(2)).getScaledInstance(178, 135, Image.SCALE_SMOOTH);
+        imgicn = new ImageIcon(img);
+        image3.setIcon(imgicn);
+        img = Toolkit.getDefaultToolkit().createImage(images.get(3)).getScaledInstance(178, 135, Image.SCALE_SMOOTH);
+        imgicn = new ImageIcon(img);
+        image4.setIcon(imgicn);
+        img = Toolkit.getDefaultToolkit().createImage(images.get(4)).getScaledInstance(178, 135, Image.SCALE_SMOOTH);
+        imgicn = new ImageIcon(img);
+        image5.setIcon(imgicn);
+        img = Toolkit.getDefaultToolkit().createImage(images.get(5)).getScaledInstance(178, 135, Image.SCALE_SMOOTH);
+        imgicn = new ImageIcon(img);
+        image6.setIcon(imgicn);
+        addressText.setText(ad.getHouse().getLocation());
+        dailyPriceText.setText(String.valueOf(ad.getPrice()));
+        houseTypeText.setText(ad.getAdvertisementType());
+        vehicleParkText.setText(String.valueOf(ad.getHouse().isHasVehiclePark()));
+        heatingTypeText.setText(ad.getHouse().getHeating());
+        roomNumberText.setText(ad.getHouse().getRoomNumber());
+        shortDescriptionText.setText(ad.getHouse().getShortDescription());
+        populateCommentTable();
+
+    }
+
     public advertisementDetailScreen() {
         initComponents();
-         Toolkit toolkit = getToolkit();
+        Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
+    }
+
+    public void populateCommentTable() {
+        Comment comment = new Comment();
+        comment.setAdvertisementId(advertisementId);
+        commentList = comment.getAllComments();
+        dfmodel.setRowCount(0);
+        dfmodel = (DefaultTableModel) jTable1.getModel();
+        dfmodel.getColumnClass(0);
+        Advertisement ad = new Advertisement();
+        for (Comment commitem : commentList) {
+            Object tbData[] = {commitem.getUserName(), commitem.getContent(), commitem.getPoint()};
+            dfmodel.addRow(tbData);
+        }
     }
 
     /**
@@ -81,14 +150,12 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
 
         turnHome.setBackground(new java.awt.Color(51, 51, 51));
         turnHome.setForeground(new java.awt.Color(255, 255, 255));
-        turnHome.setIcon(new javax.swing.ImageIcon("C:\\Users\\emrec\\OneDrive\\Belgeler\\NetBeansProjects\\OOP\\src\\main\\java\\img\\icons8-left-arrow-32(1).png")); // NOI18N
         turnHome.setBorder(null);
         turnHome.setBorderPainted(false);
         turnHome.setContentAreaFilled(false);
         turnHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         turnHome.setDefaultCapable(false);
         turnHome.setFocusPainted(false);
-        turnHome.setRolloverEnabled(false);
         turnHome.setVerifyInputWhenFocusTarget(false);
         turnHome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,6 +314,11 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("ADD");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jSpinner1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 1, 5, 1));
@@ -254,10 +326,7 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "User Name", "Point", "Comment"
@@ -286,17 +355,17 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
             .addGroup(commentPanel1Layout.createSequentialGroup()
                 .addGroup(commentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1156, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, commentPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(commentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, commentPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(127, 127, 127))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, commentPanel1Layout.createSequentialGroup()
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(28, 28, 28)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1156, Short.MAX_VALUE))
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, commentPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 973, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(127, 127, 127)))))
                 .addContainerGap())
         );
         commentPanel1Layout.setVerticalGroup(
@@ -444,9 +513,10 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -464,7 +534,7 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_turnHomeActionPerformed
 
     private void image1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_image1ActionPerformed
-        
+
 
     }//GEN-LAST:event_image1ActionPerformed
 
@@ -495,6 +565,16 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
     private void image2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_image2MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_image2MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Comment postComment=new Comment();
+        postComment.setContent(jTextArea5.getText());
+        postComment.setOwnerId(personId);
+        postComment.setPoint((int)jSpinner1.getValue());
+        postComment.post(postComment, personId, advertisementId);
+        populateCommentTable();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

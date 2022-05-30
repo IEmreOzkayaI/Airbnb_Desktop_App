@@ -5,6 +5,7 @@
 package advertisement.abstracts;
 
 import advertisement.concretes.Comment;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +15,6 @@ import java.util.List;
 public interface IComment {
     void post(Comment comment , int personId, int advertisementId);
     void update(Comment comment , int personId, int advertisementId);
-    List<Comment> getAllComments();
+    ArrayList<Comment> getAllComments();
     void delete(int commentId);
 }

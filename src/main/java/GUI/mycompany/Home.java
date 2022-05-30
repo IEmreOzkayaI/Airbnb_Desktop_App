@@ -43,6 +43,7 @@ public class Home extends javax.swing.JFrame {
     private static Personnel personnel;
     static boolean profileMenuOpen = false;
     private static String searchKey2="";
+    private static int personID=0;
     DefaultTableModel dfmodel = new DefaultTableModel();
 
     public Home() {
@@ -104,6 +105,7 @@ public class Home extends javax.swing.JFrame {
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
         this.customer = customer;
+        personID=customer.getId();
         this.isLogin = isLogin;
 
         if (isLogin) {
@@ -440,14 +442,14 @@ public class Home extends javax.swing.JFrame {
         tblAdvertisements.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         tblAdvertisements.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, "test", "test", "test", "test", "test", "test"}
+
             },
             new String [] {
-                "Image", "Name", "Type", "Heating", "Room Number", "Price", "Adress", "Short Description"
+                "ID", "HouseID", "Image", "Name", "Type", "Heating", "Room Number", "Price", "Adress", "Short Description"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                true, true, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -455,17 +457,24 @@ public class Home extends javax.swing.JFrame {
             }
         });
         tblAdvertisements.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblAdvertisements.setFocusable(false);
+        tblAdvertisements.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblAdvertisements.setShowGrid(true);
+        tblAdvertisements.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAdvertisementsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblAdvertisements);
         if (tblAdvertisements.getColumnModel().getColumnCount() > 0) {
-            tblAdvertisements.getColumnModel().getColumn(0).setResizable(false);
-            tblAdvertisements.getColumnModel().getColumn(1).setResizable(false);
             tblAdvertisements.getColumnModel().getColumn(2).setResizable(false);
             tblAdvertisements.getColumnModel().getColumn(3).setResizable(false);
             tblAdvertisements.getColumnModel().getColumn(4).setResizable(false);
             tblAdvertisements.getColumnModel().getColumn(5).setResizable(false);
             tblAdvertisements.getColumnModel().getColumn(6).setResizable(false);
             tblAdvertisements.getColumnModel().getColumn(7).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(8).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(9).setResizable(false);
         }
 
         javax.swing.GroupLayout rightSideLayout = new javax.swing.GroupLayout(rightSide);
@@ -637,10 +646,16 @@ public class Home extends javax.swing.JFrame {
                 byte[] icon = house.getHouseIconImg();
                 Image img = Toolkit.getDefaultToolkit().createImage(icon).getScaledInstance(250, 250, Image.SCALE_SMOOTH);
                 ImageIcon imgicn=new ImageIcon(img);
-                Object tbData[] = {imgicn, advertisement.getAdvertisementName(), advertisement.getAdvertisementType(), advertisement.getHouse().getHeating(), advertisement.getHouse().getRoomNumber(),
+                Object tbData[] = {advertisement.getId(),advertisement.getHouse().getId(),imgicn, advertisement.getAdvertisementName(), advertisement.getAdvertisementType(), advertisement.getHouse().getHeating(), advertisement.getHouse().getRoomNumber(),
                     advertisement.getPrice(), advertisement.getHouse().getLocation(), advertisement.getHouse().getShortDescription()};
 
                 dfmodel.addRow(tbData);
+            }
+            if(tblAdvertisements.getColumnName(0).equals("ID")){
+                tblAdvertisements.removeColumn(tblAdvertisements.getColumn("ID"));
+            }
+            if(tblAdvertisements.getColumnName(0).equals("HouseID")){
+                tblAdvertisements.removeColumn(tblAdvertisements.getColumn("HouseID"));
             }
             tblAdvertisements.setRowHeight(250);
             tblAdvertisements.getTableHeader().setReorderingAllowed(false);
@@ -765,6 +780,17 @@ public class Home extends javax.swing.JFrame {
         rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
         tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
     }//GEN-LAST:event_villaFilterActionPerformed
+
+    private void tblAdvertisementsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAdvertisementsMouseClicked
+        // TODO add your handling code here:
+        int selectedRow=tblAdvertisements.getSelectedRow();
+        advertisementDetailScreen details=new advertisementDetailScreen();
+        int id = (Integer) tblAdvertisements.getModel().getValueAt(tblAdvertisements.convertRowIndexToModel(selectedRow), 0);
+        int houseid = (Integer) tblAdvertisements.getModel().getValueAt(tblAdvertisements.convertRowIndexToModel(tblAdvertisements.getSelectedRow()), 0);
+        details.viewAdvertisementDetails(id,houseid,personID);
+        details.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        details.setVisible(true);
+    }//GEN-LAST:event_tblAdvertisementsMouseClicked
 
     /**
      * @param args the command line arguments
