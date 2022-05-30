@@ -9,6 +9,7 @@ import advertisement.concretes.Advertisement;
 import user.concretes.Customer;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,6 +41,7 @@ public class LogIn extends javax.swing.JFrame {
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
         db = SingletonConnection.getCon();
+        jPanel2.getRootPane().setDefaultButton(logIn);
 
     }
 
@@ -164,6 +166,11 @@ public class LogIn extends javax.swing.JFrame {
                 passwordActionPerformed(evt);
             }
         });
+        password.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                passwordKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -219,9 +226,7 @@ public class LogIn extends javax.swing.JFrame {
         RegisterUpdate reg = new RegisterUpdate();
         reg.show();
     }//GEN-LAST:event_forgotPasswordActionPerformed
-    
-    private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
-        // TODO add your handling code here:
+    private void logIn(){
         Customer customer = new Customer().getUserByEmail(email.getText());
         HouseOwner houseOwner = new HouseOwner().getUserByEmail(email.getText());
         Personnel personnel = new Personnel().getUserByEmail(email.getText());
@@ -239,6 +244,10 @@ public class LogIn extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "There is not membership for this email");
 
         }
+    }
+    private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
+        // TODO add your handling code here:
+        logIn();
     }//GEN-LAST:event_logInActionPerformed
 
     private void control(boolean result, HouseOwner houseOwner) {
@@ -273,7 +282,7 @@ public class LogIn extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Email or password is not valid");
             } else {
                 this.dispose();
-                PersonnelScreen pScreen = new PersonnelScreen(true,personnel);
+                PersonnelScreen pScreen = new PersonnelScreen(true, personnel);
                 pScreen.show();
             }
         }
@@ -320,6 +329,14 @@ public class LogIn extends javax.swing.JFrame {
     private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordActionPerformed
+
+    private void passwordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            // Enter was pressed. Your code goes here.
+            logIn();
+        }
+    }//GEN-LAST:event_passwordKeyPressed
 
     /**
      * @param args the command line arguments
@@ -427,6 +444,5 @@ public class LogIn extends javax.swing.JFrame {
         return false;
 
     }
-    
 
 }

@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -41,6 +42,7 @@ public class Home extends javax.swing.JFrame {
     private static Customer customer;
     private static Personnel personnel;
     static boolean profileMenuOpen = false;
+    private static String searchKey2="";
     DefaultTableModel dfmodel = new DefaultTableModel();
 
     public Home() {
@@ -55,6 +57,7 @@ public class Home extends javax.swing.JFrame {
 
     public Home(boolean isLogin, HouseOwner houseOwner) {
         initComponents();
+        populateTable();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
@@ -78,6 +81,7 @@ public class Home extends javax.swing.JFrame {
 
     public Home(boolean isLogin, Personnel personnel) {
         initComponents();
+        populateTable();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
@@ -95,6 +99,7 @@ public class Home extends javax.swing.JFrame {
 
     public Home(boolean isLogin, Customer customer) {
         initComponents();
+        populateTable();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
@@ -293,15 +298,36 @@ public class Home extends javax.swing.JFrame {
 
         residenceFilter.setBackground(new java.awt.Color(255, 90, 95));
         residenceFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Residence"));
+        residenceFilter.setFocusPainted(false);
+        residenceFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                residenceFilterActionPerformed(evt);
+            }
+        });
 
         apartmentFilter.setBackground(new java.awt.Color(255, 90, 95));
         apartmentFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Manor"));
+        apartmentFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                apartmentFilterActionPerformed(evt);
+            }
+        });
 
         villaFilter.setBackground(new java.awt.Color(255, 90, 95));
         villaFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Villa"));
+        villaFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                villaFilterActionPerformed(evt);
+            }
+        });
 
         treeHouseFilter.setBackground(new java.awt.Color(255, 90, 95));
         treeHouseFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Tree House"));
+        treeHouseFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                treeHouseFilterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout leftSideLayout = new javax.swing.GroupLayout(leftSide);
         leftSide.setLayout(leftSideLayout);
@@ -648,8 +674,96 @@ public class Home extends javax.swing.JFrame {
         String searchKey = searchBar.getText();
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
         tblAdvertisements.setRowSorter(tableRowSorter);
-        tableRowSorter.setRowFilter(RowFilter.regexFilter(searchKey));
+        List<RowFilter<Object,Object>> rfs = 
+             new ArrayList<RowFilter<Object,Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
     }//GEN-LAST:event_searchBarKeyReleased
+
+    private void residenceFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_residenceFilterActionPerformed
+        // TODO add your handling code here:
+        if(searchKey2=="apartment"){
+             searchKey2="";
+             residenceFilter.setSelected(false);
+             residenceFilter.setFocusPainted(false);
+        }else{
+            searchKey2="apartment";
+             residenceFilter.setSelected(true);
+             residenceFilter.setFocusPainted(true);
+        }
+        String searchKey = searchBar.getText();
+        TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
+        tblAdvertisements.setRowSorter(tableRowSorter);
+        List<RowFilter<Object,Object>> rfs = 
+             new ArrayList<RowFilter<Object,Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
+    }//GEN-LAST:event_residenceFilterActionPerformed
+
+    private void treeHouseFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_treeHouseFilterActionPerformed
+        // TODO add your handling code here:
+        if(searchKey2=="tree house"){
+             searchKey2="";
+             treeHouseFilter.setSelected(false);
+             treeHouseFilter.setFocusPainted(false);
+        }else{
+            searchKey2="tree house";
+            treeHouseFilter.setSelected(true);
+            treeHouseFilter.setFocusPainted(true);
+        }
+        String searchKey = searchBar.getText();
+        TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
+        tblAdvertisements.setRowSorter(tableRowSorter);
+        List<RowFilter<Object,Object>> rfs = 
+             new ArrayList<RowFilter<Object,Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
+    }//GEN-LAST:event_treeHouseFilterActionPerformed
+
+    private void apartmentFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_apartmentFilterActionPerformed
+        // TODO add your handling code here:
+        if(searchKey2=="manor"){
+             searchKey2="";
+             apartmentFilter.setSelected(false);
+             apartmentFilter.setFocusPainted(false);
+        }else{
+            searchKey2="manor";
+            apartmentFilter.setSelected(true);
+            apartmentFilter.setFocusPainted(true);
+        }
+        String searchKey = searchBar.getText();
+        TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
+        tblAdvertisements.setRowSorter(tableRowSorter);
+        List<RowFilter<Object,Object>> rfs = 
+             new ArrayList<RowFilter<Object,Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
+    }//GEN-LAST:event_apartmentFilterActionPerformed
+
+    private void villaFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_villaFilterActionPerformed
+        // TODO add your handling code here:
+        if(searchKey2=="villa"){
+             searchKey2="";
+             villaFilter.setSelected(false);
+             villaFilter.setFocusPainted(false);
+        }else{
+            searchKey2="villa";
+            villaFilter.setSelected(true);
+            villaFilter.setFocusPainted(true);
+        }
+        String searchKey = searchBar.getText();
+        TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
+        tblAdvertisements.setRowSorter(tableRowSorter);
+        List<RowFilter<Object,Object>> rfs = 
+             new ArrayList<RowFilter<Object,Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
+    }//GEN-LAST:event_villaFilterActionPerformed
 
     /**
      * @param args the command line arguments
