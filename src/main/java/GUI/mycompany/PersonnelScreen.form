@@ -69,7 +69,6 @@
               <Dimension value="[100, 40]"/>
             </Property>
             <Property name="requestFocusEnabled" type="boolean" value="false"/>
-            <Property name="rolloverEnabled" type="boolean" value="false"/>
             <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -99,7 +98,6 @@
               <Dimension value="[100, 40]"/>
             </Property>
             <Property name="requestFocusEnabled" type="boolean" value="false"/>
-            <Property name="rolloverEnabled" type="boolean" value="false"/>
             <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -129,7 +127,6 @@
               <Dimension value="[100, 40]"/>
             </Property>
             <Property name="requestFocusEnabled" type="boolean" value="false"/>
-            <Property name="rolloverEnabled" type="boolean" value="false"/>
             <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -295,7 +292,6 @@
           <Dimension value="[100, 40]"/>
         </Property>
         <Property name="requestFocusEnabled" type="boolean" value="false"/>
-        <Property name="rolloverEnabled" type="boolean" value="false"/>
         <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -325,7 +321,6 @@
           <Dimension value="[100, 40]"/>
         </Property>
         <Property name="requestFocusEnabled" type="boolean" value="false"/>
-        <Property name="rolloverEnabled" type="boolean" value="false"/>
         <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -504,7 +499,6 @@
                       <Dimension value="[100, 40]"/>
                     </Property>
                     <Property name="requestFocusEnabled" type="boolean" value="false"/>
-                    <Property name="rolloverEnabled" type="boolean" value="false"/>
                     <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -535,7 +529,6 @@
                       <Dimension value="[160, 40]"/>
                     </Property>
                     <Property name="requestFocusEnabled" type="boolean" value="false"/>
-                    <Property name="rolloverEnabled" type="boolean" value="false"/>
                     <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -565,7 +558,6 @@
                       <Dimension value="[160, 40]"/>
                     </Property>
                     <Property name="requestFocusEnabled" type="boolean" value="false"/>
-                    <Property name="rolloverEnabled" type="boolean" value="false"/>
                     <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -595,7 +587,6 @@
                       <Dimension value="[160, 40]"/>
                     </Property>
                     <Property name="requestFocusEnabled" type="boolean" value="false"/>
-                    <Property name="rolloverEnabled" type="boolean" value="false"/>
                     <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
                   </Properties>
                   <Events>
