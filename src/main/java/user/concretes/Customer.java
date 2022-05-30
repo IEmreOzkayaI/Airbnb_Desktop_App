@@ -50,8 +50,8 @@ public class Customer extends Person implements ICustomer {
 
             PreparedStatement prepstmtPerson = db.prepareStatement(Singleton.SingletonConnection.insertionPerson);
             PreparedStatement prepstmtCustomer = db.prepareStatement(Singleton.SingletonConnection.insertionCustomer);
-            // this id is null value because our database id increasing auto.
-            // because of a error we couldn't do fk relation on the database table.So we use different values.
+            // this id is null value because our database id increments auto.
+            // because of an error we couldn't do fk relation on the database table.So we use different values.
             int id = 0;
             prepstmtPerson.setInt(1, person.getId());
             prepstmtPerson.setString(2, person.getName());

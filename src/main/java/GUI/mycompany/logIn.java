@@ -5,6 +5,7 @@
 package GUI.mycompany;
 
 import Singleton.SingletonConnection;
+import advertisement.concretes.Advertisement;
 import user.concretes.Customer;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -12,9 +13,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import user.abstracts.IPerson;
 import user.concretes.HouseOwner;
 import user.concretes.Person;
@@ -82,20 +85,16 @@ public class LogIn extends javax.swing.JFrame {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("Welcome To AirBnb");
         jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 430, 500, 140));
-
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\emrec\\OneDrive\\Belgeler\\NetBeansProjects\\OOP\\src\\main\\java\\img\\2993798_social media_airbnb_icon (3).png")); // NOI18N
         jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 210, -1, -1));
 
         turnHome.setBackground(new java.awt.Color(51, 51, 51));
         turnHome.setForeground(new java.awt.Color(255, 255, 255));
-        turnHome.setIcon(new javax.swing.ImageIcon("C:\\Users\\emrec\\OneDrive\\Belgeler\\NetBeansProjects\\OOP\\src\\main\\java\\img\\icons8-left-arrow-32(1).png")); // NOI18N
         turnHome.setBorder(null);
         turnHome.setBorderPainted(false);
         turnHome.setContentAreaFilled(false);
         turnHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         turnHome.setDefaultCapable(false);
         turnHome.setFocusPainted(false);
-        turnHome.setRolloverEnabled(false);
         turnHome.setVerifyInputWhenFocusTarget(false);
         turnHome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -132,7 +131,6 @@ public class LogIn extends javax.swing.JFrame {
         logIn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logIn.setDefaultCapable(false);
         logIn.setRequestFocusEnabled(false);
-        logIn.setRolloverEnabled(false);
         logIn.setVerifyInputWhenFocusTarget(false);
         logIn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -221,7 +219,7 @@ public class LogIn extends javax.swing.JFrame {
         RegisterUpdate reg = new RegisterUpdate();
         reg.show();
     }//GEN-LAST:event_forgotPasswordActionPerformed
-
+    
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
         Customer customer = new Customer().getUserByEmail(email.getText());
@@ -356,6 +354,30 @@ public class LogIn extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -405,5 +427,6 @@ public class LogIn extends javax.swing.JFrame {
         return false;
 
     }
+    
 
 }

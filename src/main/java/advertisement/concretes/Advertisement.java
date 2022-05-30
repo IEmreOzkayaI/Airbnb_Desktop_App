@@ -122,6 +122,7 @@ public class Advertisement implements IAdvertisement {
                 Statement st2 = db.createStatement();
                 ResultSet rs2 = st2.executeQuery(SingletonConnection.getHouseById + "'" + rs.getInt("house_id") + "'");
                 House house = houseFactory.getHouse(type);
+                
                 while (rs2.next()) {
                     house.setId(rs2.getInt("id"));
                     house.setHasVehiclePark(rs2.getBoolean("has_vehicle_park"));
@@ -130,6 +131,9 @@ public class Advertisement implements IAdvertisement {
                     house.setHouseOwnerId(rs2.getInt("person_id"));
                     house.setLocation(rs2.getString("address"));
                     house.setShortDescription(rs2.getString("short_description"));
+                    
+                        
+                    
 //                    house.setHouseImage(rs2.getString("address"));
 
                 }
@@ -145,7 +149,50 @@ public class Advertisement implements IAdvertisement {
 
     @Override
     public List<Advertisement> getAllAdvertisementsIsActiveTrue() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Advertisement> list = new ArrayList<>();
+
+        try {
+            st = db.createStatement();
+            rs = st.executeQuery(SingletonConnection.getAllAdvertisementsIsActiveTrue);
+            while (rs.next()) {
+                Advertisement ad = new Advertisement();
+                ad.setId(rs.getInt("id"));
+                ad.setHouseOwnerId(rs.getInt("person_id"));
+                ad.setAdvertisementName(rs.getString("advertisement_name"));
+                String type = rs.getString("advertisement_type");
+                ad.setAdvertisementType(type);
+                ad.setActivationPersonnelId(rs.getInt("activation_personnel_id"));
+                ad.setActivationResult(rs.getBoolean("activation_result"));
+                ad.setCalendar(rs.getDate("calendar"));
+                ad.setPrice(rs.getInt("price"));
+                Statement st2 = db.createStatement();
+                ResultSet rs2 = st2.executeQuery(SingletonConnection.getHouseById + "'" + rs.getInt("house_id") + "'");
+                House house = houseFactory.getHouse(type);
+                while (rs2.next()) {
+                    house.setId(rs2.getInt("id"));
+                    house.setHasVehiclePark(rs2.getBoolean("has_vehicle_park"));
+                    house.setRoomNumber(rs2.getString("room_number"));
+                    house.setHeating(rs2.getString("heating"));
+                    house.setHouseOwnerId(rs2.getInt("person_id"));
+                    house.setLocation(rs2.getString("address"));
+                    house.setShortDescription(rs2.getString("short_description"));
+                    Statement st3 = db.createStatement();
+                    ResultSet rs3= st3.executeQuery(SingletonConnection.getHouseIconImg+"'"+rs.getInt("house_id")+ "'");
+                    System.out.println(SingletonConnection.getHouseIconImg+"'"+rs.getInt("house_id")+ "'");
+                    while(rs3.next()){
+                        System.out.println("RAW IMAGE BLOB FROM DATABASE="+rs3.getBytes("image_file").length);
+                        house.setHouseIconImg(rs3.getBytes("image_file"));
+                    }
+//                    house.setHouseImage(rs2.getString("address"));
+                }
+                ad.setHouse(house);
+                list.add(ad);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Advertisement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     @Override

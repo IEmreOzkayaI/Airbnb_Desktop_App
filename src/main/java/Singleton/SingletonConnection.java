@@ -26,8 +26,10 @@ public class SingletonConnection {
     public static String getImageByHouseId = "SELECT * FROM house_images WHERE house_id=";
     public static String insertionHouseImages = "INSERT INTO house_images VALUES(?,?,?,?)";
     public static String getAllAdvertisementsIsActiveFalse = "SELECT * FROM advertisements WHERE activation_result=false";
+    public static String getAllAdvertisementsIsActiveTrue = "SELECT * FROM advertisements WHERE activation_result=true";
     public static String getAllPersonIsActiveFalse = "SELECT * FROM persons WHERE activation_result=false";
     public static String getHouseById = "SELECT * FROM houses WHERE id=";
+    public static String getHouseIconImg="SELECT * FROM house_images WHERE house_id=";
 
     private SingletonConnection() {
         getCon();
@@ -36,7 +38,7 @@ public class SingletonConnection {
     public static Connection getCon() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localHost:3306/air_bnb", "root", "kaSaba.2001");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/airbnb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "12345");
 
         } catch (Exception e) {
             System.out.println(e);

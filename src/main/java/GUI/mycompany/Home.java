@@ -4,10 +4,21 @@
  */
 package GUI.mycompany;
 
+import advertisement.abstracts.House;
+import javax.swing.table.DefaultTableModel;
+import advertisement.concretes.Advertisement;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
-import javax.swing.JButton;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 import user.concretes.Customer;
 import user.concretes.HouseOwner;
 import user.concretes.Person;
@@ -22,15 +33,19 @@ public class Home extends javax.swing.JFrame {
     /**
      * Creates new form Home2
      */
+    private boolean isAdvertisementsListed = false;
+    private boolean isPersonListed = false;
     static boolean isLogin = false;
     private static Person person;
     private static HouseOwner houseOwner;
     private static Customer customer;
     private static Personnel personnel;
     static boolean profileMenuOpen = false;
+    DefaultTableModel dfmodel = new DefaultTableModel();
 
     public Home() {
         initComponents();
+        populateTable();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
@@ -53,7 +68,6 @@ public class Home extends javax.swing.JFrame {
             addAdvertisement.setBounds(725, 8, 180, 40);
             profileMenu.setBounds(920, 8, 100, 40);
             profileMenu.setText(houseOwner.getName().toUpperCase());
-
             navbar.setPreferredSize(new Dimension(1049, 56));
             this.navbar.add(searchBar);
             this.navbar.add(profileMenu);
@@ -131,7 +145,7 @@ public class Home extends javax.swing.JFrame {
         logIn = new javax.swing.JButton();
         searchBar = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        advertisementList = new javax.swing.JTable();
+        tblAdvertisements = new javax.swing.JTable();
 
         becameHouseOwner.setBackground(new java.awt.Color(153, 153, 153));
         becameHouseOwner.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -141,7 +155,6 @@ public class Home extends javax.swing.JFrame {
         becameHouseOwner.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         becameHouseOwner.setPreferredSize(new java.awt.Dimension(210, 40));
         becameHouseOwner.setRequestFocusEnabled(false);
-        becameHouseOwner.setRolloverEnabled(false);
         becameHouseOwner.setVerifyInputWhenFocusTarget(false);
         becameHouseOwner.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -167,7 +180,6 @@ public class Home extends javax.swing.JFrame {
         profile.setDefaultCapable(false);
         profile.setPreferredSize(new java.awt.Dimension(100, 40));
         profile.setRequestFocusEnabled(false);
-        profile.setRolloverEnabled(false);
         profile.setVerifyInputWhenFocusTarget(false);
         profile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -184,7 +196,6 @@ public class Home extends javax.swing.JFrame {
         wallet.setDefaultCapable(false);
         wallet.setPreferredSize(new java.awt.Dimension(100, 40));
         wallet.setRequestFocusEnabled(false);
-        wallet.setRolloverEnabled(false);
         wallet.setVerifyInputWhenFocusTarget(false);
         wallet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,7 +212,6 @@ public class Home extends javax.swing.JFrame {
         exit.setDefaultCapable(false);
         exit.setPreferredSize(new java.awt.Dimension(100, 40));
         exit.setRequestFocusEnabled(false);
-        exit.setRolloverEnabled(false);
         exit.setVerifyInputWhenFocusTarget(false);
         exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -242,7 +252,6 @@ public class Home extends javax.swing.JFrame {
         profileMenu.setDefaultCapable(false);
         profileMenu.setPreferredSize(new java.awt.Dimension(100, 40));
         profileMenu.setRequestFocusEnabled(false);
-        profileMenu.setRolloverEnabled(false);
         profileMenu.setVerifyInputWhenFocusTarget(false);
         profileMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -264,7 +273,6 @@ public class Home extends javax.swing.JFrame {
         addAdvertisement.setDefaultCapable(false);
         addAdvertisement.setPreferredSize(new java.awt.Dimension(143, 40));
         addAdvertisement.setRequestFocusEnabled(false);
-        addAdvertisement.setRolloverEnabled(false);
         addAdvertisement.setVerifyInputWhenFocusTarget(false);
         addAdvertisement.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -337,7 +345,6 @@ public class Home extends javax.swing.JFrame {
         signUp.setDefaultCapable(false);
         signUp.setPreferredSize(new java.awt.Dimension(80, 40));
         signUp.setRequestFocusEnabled(false);
-        signUp.setRolloverEnabled(false);
         signUp.setVerifyInputWhenFocusTarget(false);
         signUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -353,7 +360,6 @@ public class Home extends javax.swing.JFrame {
         logIn.setDefaultCapable(false);
         logIn.setPreferredSize(new java.awt.Dimension(80, 40));
         logIn.setRequestFocusEnabled(false);
-        logIn.setRolloverEnabled(false);
         logIn.setVerifyInputWhenFocusTarget(false);
         logIn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -365,11 +371,16 @@ public class Home extends javax.swing.JFrame {
         searchBar.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         searchBar.setForeground(new java.awt.Color(255, 255, 255));
         searchBar.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        searchBar.setText("Search...");
+        searchBar.setToolTipText("Search..");
         searchBar.setBorder(null);
         searchBar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchBarActionPerformed(evt);
+            }
+        });
+        searchBar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchBarKeyReleased(evt);
             }
         });
 
@@ -397,17 +408,38 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        advertisementList.setBackground(new java.awt.Color(153, 153, 153));
-        advertisementList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        advertisementList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        searchBar.getAccessibleContext().setAccessibleName("");
 
+        tblAdvertisements.setBackground(new java.awt.Color(153, 153, 153));
+        tblAdvertisements.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        tblAdvertisements.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, "test", "test", "test", "test", "test", "test"}
             },
             new String [] {
-
+                "Name", "Type", "Heating", "Room Number", "Price", "Adress", "Short Description"
             }
-        ));
-        jScrollPane1.setViewportView(advertisementList);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblAdvertisements.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblAdvertisements.setShowGrid(true);
+        jScrollPane1.setViewportView(tblAdvertisements);
+        if (tblAdvertisements.getColumnModel().getColumnCount() > 0) {
+            tblAdvertisements.getColumnModel().getColumn(0).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(1).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(2).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(3).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(4).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(5).setResizable(false);
+            tblAdvertisements.getColumnModel().getColumn(6).setResizable(false);
+        }
 
         javax.swing.GroupLayout rightSideLayout = new javax.swing.GroupLayout(rightSide);
         rightSide.setLayout(rightSideLayout);
@@ -498,9 +530,9 @@ public class Home extends javax.swing.JFrame {
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // TODO add your handling code here:
-       this.dispose();
-       Home home = new Home();
-       home.show();
+        this.dispose();
+        Home home = new Home();
+        home.show();
 
     }//GEN-LAST:event_exitActionPerformed
 
@@ -566,7 +598,39 @@ public class Home extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_becameHouseOwnerMouseClicked
+    private void populateTable() {
+        if (!isAdvertisementsListed) {
+            dfmodel.setRowCount(0);
+            dfmodel = (DefaultTableModel) tblAdvertisements.getModel();
+            dfmodel.getColumnClass(0);
+            Advertisement ad = new Advertisement();
+            List<Advertisement> advertisementList = ad.getAllAdvertisementsIsActiveTrue();
+            for (Advertisement advertisement : advertisementList) {
+                House house = advertisement.getHouse();
+                byte[] icon = house.getHouseIconImg();
+                Image img = Toolkit.getDefaultToolkit().createImage(icon).getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+                ImageIcon imgicn=new ImageIcon(img);
+                Object tbData[] = {imgicn, advertisement.getAdvertisementName(), advertisement.getAdvertisementType(), advertisement.getHouse().getHeating(), advertisement.getHouse().getRoomNumber(),
+                    advertisement.getPrice(), advertisement.getHouse().getLocation(), advertisement.getHouse().getShortDescription()};
 
+                dfmodel.addRow(tbData);
+            }
+            tblAdvertisements.setRowHeight(250);
+            tblAdvertisements.getTableHeader().setReorderingAllowed(false);
+            tblAdvertisements.getColumnModel().getColumn(0).setPreferredWidth(250);
+            tblAdvertisements.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
+            isAdvertisementsListed = true;
+        }
+    }
+    private class ImageRenderer extends DefaultTableCellRenderer{
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JLabel lphoto = new JLabel((ImageIcon)value);
+            return lphoto;
+        }
+        
+    }
     private void addAdvertisementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAdvertisementActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_addAdvertisementActionPerformed
@@ -576,8 +640,16 @@ public class Home extends javax.swing.JFrame {
         AdvertisementAdd addAdvertismeent = new AdvertisementAdd(this.houseOwner);
         this.dispose();
         addAdvertismeent.show();
-        
+
     }//GEN-LAST:event_addAdvertisementMouseClicked
+
+    private void searchBarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyReleased
+        // TODO add your handling code here:
+        String searchKey = searchBar.getText();
+        TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
+        tblAdvertisements.setRowSorter(tableRowSorter);
+        tableRowSorter.setRowFilter(RowFilter.regexFilter(searchKey));
+    }//GEN-LAST:event_searchBarKeyReleased
 
     /**
      * @param args the command line arguments
@@ -619,7 +691,6 @@ public class Home extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addAdvertisement;
-    private javax.swing.JTable advertisementList;
     private javax.swing.JButton apartmentFilter;
     private javax.swing.JButton becameHouseOwner;
     private javax.swing.JPanel content;
@@ -635,6 +706,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel rightSide;
     private javax.swing.JTextField searchBar;
     private javax.swing.JButton signUp;
+    private javax.swing.JTable tblAdvertisements;
     private javax.swing.JButton treeHouseFilter;
     private javax.swing.JButton villaFilter;
     private javax.swing.JButton wallet;

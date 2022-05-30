@@ -109,7 +109,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         profile.setDefaultCapable(false);
         profile.setPreferredSize(new java.awt.Dimension(100, 40));
         profile.setRequestFocusEnabled(false);
-        profile.setRolloverEnabled(false);
         profile.setVerifyInputWhenFocusTarget(false);
         profile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -126,7 +125,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         wallet.setDefaultCapable(false);
         wallet.setPreferredSize(new java.awt.Dimension(100, 40));
         wallet.setRequestFocusEnabled(false);
-        wallet.setRolloverEnabled(false);
         wallet.setVerifyInputWhenFocusTarget(false);
         wallet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,7 +141,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         exit.setDefaultCapable(false);
         exit.setPreferredSize(new java.awt.Dimension(100, 40));
         exit.setRequestFocusEnabled(false);
-        exit.setRolloverEnabled(false);
         exit.setVerifyInputWhenFocusTarget(false);
         exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -243,7 +240,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         validate.setDefaultCapable(false);
         validate.setPreferredSize(new java.awt.Dimension(100, 40));
         validate.setRequestFocusEnabled(false);
-        validate.setRolloverEnabled(false);
         validate.setVerifyInputWhenFocusTarget(false);
         validate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -264,7 +260,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         reject.setDefaultCapable(false);
         reject.setPreferredSize(new java.awt.Dimension(100, 40));
         reject.setRequestFocusEnabled(false);
-        reject.setRolloverEnabled(false);
         reject.setVerifyInputWhenFocusTarget(false);
         reject.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -294,7 +289,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         profileMenu.setDefaultCapable(false);
         profileMenu.setPreferredSize(new java.awt.Dimension(100, 40));
         profileMenu.setRequestFocusEnabled(false);
-        profileMenu.setRolloverEnabled(false);
         profileMenu.setVerifyInputWhenFocusTarget(false);
         profileMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -316,7 +310,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         Advertisements.setDefaultCapable(false);
         Advertisements.setPreferredSize(new java.awt.Dimension(160, 40));
         Advertisements.setRequestFocusEnabled(false);
-        Advertisements.setRolloverEnabled(false);
         Advertisements.setVerifyInputWhenFocusTarget(false);
         Advertisements.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -333,7 +326,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         persons1.setDefaultCapable(false);
         persons1.setPreferredSize(new java.awt.Dimension(160, 40));
         persons1.setRequestFocusEnabled(false);
-        persons1.setRolloverEnabled(false);
         persons1.setVerifyInputWhenFocusTarget(false);
         persons1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -350,7 +342,6 @@ public class PersonnelScreen extends javax.swing.JFrame {
         persons2.setDefaultCapable(false);
         persons2.setPreferredSize(new java.awt.Dimension(160, 40));
         persons2.setRequestFocusEnabled(false);
-        persons2.setRolloverEnabled(false);
         persons2.setVerifyInputWhenFocusTarget(false);
         persons2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

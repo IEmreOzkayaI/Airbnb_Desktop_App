@@ -4,6 +4,7 @@
  */
 package advertisement.concretes;
 
+import Singleton.SingletonConnection;
 import advertisement.abstracts.House;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +27,7 @@ public class Apartment extends House {
     Connection db = Singleton.SingletonConnection.getCon();
     PreparedStatement pst;
     ResultSet rs;
-
+    Statement st;
     @Override
     public void create(File[] imageFiles, String[] imagePaths) {
         try {

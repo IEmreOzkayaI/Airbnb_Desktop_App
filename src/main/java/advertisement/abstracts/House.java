@@ -28,7 +28,7 @@ public abstract class House {
     private String heating;
     private String location;
     private String shortDescription;
-    private String houseImage;
+    private byte[] houseIconImg;
     Connection db = Singleton.SingletonConnection.getCon();
     PreparedStatement pst;
 
@@ -48,8 +48,8 @@ public abstract class House {
         return heating;
     }
 
-    public String getHouseImage() {
-        return houseImage;
+    public byte[] getHouseIconImg() {
+        return houseIconImg;
     }
 
     public int getHouseOwnerId() {
@@ -85,8 +85,8 @@ public abstract class House {
         this.heating = heating;
     }
 
-    public void setHouseImage(String houseImage) {
-        this.houseImage = houseImage;
+    public void setHouseIconImg(byte [] houseIconImg) {
+        this.houseIconImg = houseIconImg;
     }
 
     public void setHouseOwnerId(int houseOwnerId) {
