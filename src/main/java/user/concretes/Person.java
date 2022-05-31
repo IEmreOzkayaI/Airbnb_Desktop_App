@@ -45,6 +45,26 @@ public class Person implements IPerson {
     public Person() {
     }
 
+    @Override
+    public boolean update() {
+        try {
+            pst = db.prepareStatement(SingletonConnection.updataPersonById + "'" + getId()+"'");
+            pst.setString(1, this.getEmail());
+            pst.setString(2, this.getPassword());
+            pst.setString(3, this.getPhoneNumber());
+            pst.setInt(4, this.getActivationPersonnelId());
+            pst.setBoolean(5, this.isActivationResult());
+            pst.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(Person.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     
+      
+        
+        return false;
+    }
+
     /**
      *
      * @param email

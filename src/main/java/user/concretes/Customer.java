@@ -30,7 +30,6 @@ public class Customer extends Person implements ICustomer {
     private boolean isBlocked;
     private Connection db = Singleton.SingletonConnection.getCon();
 
-
     public Customer() {
         super();
         wallet = null;

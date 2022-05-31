@@ -50,6 +50,7 @@ public class SingletonConnection {
     public static String deleteCommentById = "DELETE FROM comments WHERE id=";
     public static String deleteCommentByBlockedPersonId = "DELETE FROM comments WHERE person_id=";
     public static String insertBlockedPerson = "INSERT INTO blocked_persons VALUES(?,?,?,?)";
+    public static String updataPersonById= "UPDATE persons SET email=(?) ,password=(?) , phone_number=(?), activation_personnel_id=(?),activation_result=(?)  WHERE id =";;
 
     private SingletonConnection() {
         getCon();
