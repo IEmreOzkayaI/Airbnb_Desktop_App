@@ -6,6 +6,9 @@ package advertisement.concretes;
 
 import advertisement.abstracts.House;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,8 +44,29 @@ public class Villa extends House {
 
                 this.setId(rs.getInt(1));
             }
+            addHouseImages(imageFiles, imagePaths);
 
         } catch (SQLException ex) {
+            Logger.getLogger(Apartment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void addHouseImages(File[] imageFiles, String[] imagePaths) {
+        try {
+            pst = db.prepareStatement(Singleton.SingletonConnection.insertionHouseImages, Statement.RETURN_GENERATED_KEYS);
+            for (int i = 0; i < imagePaths.length; i++) {
+                InputStream file = new FileInputStream(imageFiles[i]);
+                pst.setInt(1, 0);
+                pst.setInt(2, getId());
+                pst.setString(3, imagePaths[i]);
+                pst.setBlob(4, file);
+                pst.execute();
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Apartment.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
             Logger.getLogger(Apartment.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -62,7 +86,5 @@ public class Villa extends House {
     public void rent(File[] imageFiles, String[] imagePaths) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
-
 
 }

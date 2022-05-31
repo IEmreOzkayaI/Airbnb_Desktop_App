@@ -634,9 +634,8 @@ public class Home extends javax.swing.JFrame {
         searchBar.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         searchBar.setForeground(new java.awt.Color(255, 255, 255));
         searchBar.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        searchBar.setText("Search...");
         searchBar.setToolTipText("Search..");
-        searchBar.setBorder(null);
+        searchBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         searchBar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchBarActionPerformed(evt);
