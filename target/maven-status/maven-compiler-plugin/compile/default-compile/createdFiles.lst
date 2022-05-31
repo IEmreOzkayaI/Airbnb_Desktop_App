@@ -13,6 +13,7 @@ GUI\mycompany\LogIn$8.class
 GUI\mycompany\Home.class
 GUI\mycompany\PersonnelScreen$3.class
 GUI\mycompany\RegisterUpdate$2.class
+GUI\mycompany\advertisementDetailScreen$12.class
 user\abstracts\ICustomer.class
 user\concretes\Personnel.class
 user\abstracts\IPerson.class
@@ -32,6 +33,7 @@ GUI\mycompany\SignUp$4.class
 core\abstracts\IBlock.class
 GUI\mycompany\Home$6.class
 GUI\mycompany\Home$10.class
+GUI\mycompany\Home$20.class
 GUI\mycompany\PersonnelScreen$13.class
 advertisement\concretes\TreeHouse.class
 GUI\mycompany\LogIn$6.class

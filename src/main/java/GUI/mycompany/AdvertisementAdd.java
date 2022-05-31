@@ -370,7 +370,6 @@ public class AdvertisementAdd extends javax.swing.JFrame {
 
         turnHome.setBackground(new java.awt.Color(51, 51, 51));
         turnHome.setForeground(new java.awt.Color(255, 255, 255));
-        turnHome.setIcon(new javax.swing.ImageIcon("C:\\Users\\emrec\\OneDrive\\Belgeler\\NetBeansProjects\\OOP\\src\\main\\java\\img\\icons8-left-arrow-32(1).png")); // NOI18N
         turnHome.setBorder(null);
         turnHome.setBorderPainted(false);
         turnHome.setContentAreaFilled(false);
@@ -481,7 +480,7 @@ public class AdvertisementAdd extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(null, "Advertisement added , Please Wait Personnel Validation");
             this.dispose();
-            Home home = new Home(true, houseOwner);
+            Home home = new Home(houseOwner);
             home.show();
         }
     }//GEN-LAST:event_addActionPerformed

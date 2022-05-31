@@ -8,9 +8,9 @@ import advertisement.abstracts.House;
 import advertisement.concretes.Advertisement;
 import advertisement.concretes.Comment;
 import advertisement.concretes.HouseFactory;
+import core.concretes.Block;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -30,7 +30,6 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -39,7 +38,7 @@ import javax.swing.table.TableModel;
  *
  * @author EmreOzkaya
  */
-public class advertisementDetailScreen extends javax.swing.JFrame {
+public class AdvertisementDetailForPersonnel extends javax.swing.JFrame {
 
     /**
      * Creates new form advertisementDetailPage
@@ -49,13 +48,12 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
 
     private static int advertisementId;
     private static int houseId;
-    private boolean isCommentZoom = false;
-
     private static int personId;
     ArrayList<byte[]> images = new ArrayList();
     ArrayList<Comment> commentList = new ArrayList();
     Advertisement ad = new Advertisement();
     PreparedStatement pst;
+    Comment comment = new Comment();
     Connection db = Singleton.SingletonConnection.getCon();
     Statement st;
     ResultSet rs;
@@ -96,7 +94,7 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
 
     }
 
-    public advertisementDetailScreen() {
+    public AdvertisementDetailForPersonnel() {
         initComponents();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
@@ -104,17 +102,32 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
     }
 
     public void populateCommentTable() {
-        Comment comment = new Comment();
         comment.setAdvertisementId(advertisementId);
         commentList = comment.getAllComments();
         dfmodel.setRowCount(0);
         dfmodel = (DefaultTableModel) jTable1.getModel();
         dfmodel.getColumnClass(0);
-        Advertisement ad = new Advertisement();
-        for (Comment commitem : commentList) {
-            Object tbData[] = {commitem.getUserName(), commitem.getContent(), commitem.getPoint()};
-            dfmodel.addRow(tbData);
+        TableModel model = jTable1.getModel();
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(1100);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(50);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(6).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+        jTable1.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JTextField()));
+        jTable1.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
+        jTable1.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(new JTextField()));
+        if (commentList != null) {
+            for (Comment commitem : commentList) {
+                Object tbData[] = {commitem.getPersonId(), commitem.getId(), commitem.getUserName(), commitem.getContent(), commitem.getPoint(), "BLOCK", "DELETE"};
+                dfmodel.addRow(tbData);
+            }
         }
+
+        jTable1.setRowHeight(30);
+        jTable1.getTableHeader().setReorderingAllowed(false);
+
     }
 
     /**
@@ -202,11 +215,6 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
         image1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         image1.setForeground(new java.awt.Color(255, 255, 255));
         image1.setText("IMAGE1");
-        image1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                image1MouseClicked(evt);
-            }
-        });
         image1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 image1ActionPerformed(evt);
@@ -348,7 +356,6 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
 
         jTextArea5.setColumns(20);
         jTextArea5.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        jTextArea5.setLineWrap(true);
         jTextArea5.setRows(5);
         jTextArea5.setText("Add comment...");
         jScrollPane7.setViewportView(jTextArea5);
@@ -372,17 +379,16 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 1, 5, 1));
         jSpinner1.setBorder(null);
 
-        jTable1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "User Name", "Comment", "Point"
+                "Person Id", "Comment Id", "Name", "Content", "Point", "Block", "Delete"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -390,19 +396,13 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
             }
         });
         jTable1.setAutoscrolls(false);
-        jTable1.setEnabled(false);
-        jTable1.setFocusable(false);
-        jTable1.setRowSelectionAllowed(false);
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
             jTable1.getColumnModel().getColumn(1).setResizable(false);
             jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
         }
 
         javax.swing.GroupLayout commentPanel1Layout = new javax.swing.GroupLayout(commentPanel1);
@@ -576,12 +576,8 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
     private void image1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_image1ActionPerformed
 
-//        image1.setPreferredSize(new Dimension(500, 500));
-//        image1.show();
-  
 
     }//GEN-LAST:event_image1ActionPerformed
 
@@ -615,52 +611,104 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if (personId != 0) {
-            if (jTextArea5.getText().length() <= 185) {
-                Comment postComment = new Comment();
-                postComment.setContent(jTextArea5.getText());
-                postComment.setPersonId(personId);
-                postComment.setPoint((int) jSpinner1.getValue());
-                postComment.setAdvertisementId(advertisementId);
-                postComment.post();
-                populateCommentTable();
-            } else {
-                JOptionPane.showMessageDialog(null, "Please Short Your Comment");
-
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Please Log In For Make A Comment");
-        }
-
+        Comment postComment = new Comment();
+        postComment.setContent(jTextArea5.getText());
+        postComment.setPersonId(personId);
+        postComment.setPoint((int) jSpinner1.getValue());
+        postComment.setAdvertisementId(advertisementId);
+        postComment.post();
+        populateCommentTable();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
-        if (!isCommentZoom) {
-            TableModel model = jTable1.getModel();
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(1200);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(0);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(0);
+    // BUTTON CREATIN AND SPECİALIZATION PART
+    private class ButtonRenderer extends JButton implements TableCellRenderer {
 
-            jTable1.setFont(new FontUIResource(Font.SANS_SERIF, Font.BOLD, 11));
-            isCommentZoom = true;
-        } else {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
 
-            TableModel model = jTable1.getModel();
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(250);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(250);
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object obj, boolean selected, boolean focused, int row, int column) {
+            setText((obj == null) ? "" : obj.toString());
 
-            jTable1.setFont(new FontUIResource(Font.SANS_SERIF, Font.BOLD, 14));
-            isCommentZoom = false;
+            return this;
+        }
+
+    }
+
+    private class ButtonEditor extends DefaultCellEditor {
+
+        protected JButton btn;
+        private String lbl;
+        private Boolean clicked;
+
+        public ButtonEditor(JTextField text) {
+            super(text);
+
+            btn = new JButton();
+            btn.setOpaque(true);
+            btn.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    fireEditingStopped();
+                }
+            });
 
         }
-    }//GEN-LAST:event_jTable1MouseClicked
 
-    private void image1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_image1MouseClicked
-        // TODO add your handling code here:
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object obj, boolean selected, int row, int column) {
+            lbl = (obj == null) ? "" : obj.toString();
+            btn.setText(lbl);
+            clicked = true;
+            return btn;
+        }
 
-    }//GEN-LAST:event_image1MouseClicked
+        @Override
+        public Object getCellEditorValue() {
+            if (clicked) {
+                if (lbl.equalsIgnoreCase("block")) {
+
+                    int index = jTable1.getSelectedRow();
+                    TableModel model = jTable1.getModel();
+                    String id = model.getValueAt(index, 0).toString();
+                    String commentId = model.getValueAt(index, 1).toString();
+                    String reason = JOptionPane.showInputDialog(null, "Enter a Reason");
+                    Block block = new Block();
+                    block.setPersonId(Integer.parseInt(id));
+                    block.setReason(reason);
+                    block.blockPerson();
+                    comment.deleteByPerson(Integer.parseInt(id));
+                    populateCommentTable();
+
+                } else {
+
+                    int index = jTable1.getSelectedRow();
+                    TableModel model = jTable1.getModel();
+                    String id = model.getValueAt(index, 1).toString();
+                    comment.delete(Integer.parseInt(id));
+                    populateCommentTable();
+
+                }
+            }
+            clicked = false;
+            return new String(lbl);
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            clicked = false;
+            return super.stopCellEditing();
+        }
+
+        @Override
+        protected void fireEditingStopped() {
+
+            super.fireEditingStopped();
+        }
+
+    }
 
     /**
      * @param args the command line arguments
@@ -679,21 +727,23 @@ public class advertisementDetailScreen extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(advertisementDetailScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdvertisementDetailForPersonnel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(advertisementDetailScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdvertisementDetailForPersonnel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(advertisementDetailScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdvertisementDetailForPersonnel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(advertisementDetailScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdvertisementDetailForPersonnel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new advertisementDetailScreen().setVisible(true);
+                new AdvertisementDetailForPersonnel().setVisible(true);
             }
         });
     }

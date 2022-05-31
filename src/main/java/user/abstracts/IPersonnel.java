@@ -4,15 +4,16 @@
  */
 package user.abstracts;
 
-import core.concretes.Block;
-import user.concretes.Person;
 import java.util.List;
+import user.concretes.Person;
 
 /**
  *
  * @author EmreOzkaya
  */
-public interface ICustomer {
-    boolean register();
-    
+public interface IPersonnel {
+
+    public List<Person> getAllIsActiveFalse();
+
+    List<Person> getAllIsBlockTrue();
 }

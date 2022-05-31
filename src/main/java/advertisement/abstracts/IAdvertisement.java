@@ -20,7 +20,7 @@ public interface IAdvertisement {
 
     void delete(int advertisementId);
 
-    public void validateAdvertisement(Personnel personnel, int advertisementId);
+    void validateAdvertisement(Personnel personnel, int advertisementId);
 
     int totalPrice(int day, int customerNumber);
 

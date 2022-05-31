@@ -375,9 +375,9 @@ public class SignUp extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Email not valid");
             } else if (!password.getText().equals(repeatOfPassword.getText())) {
                 JOptionPane.showMessageDialog(null, "Passwords are not same");
-            } else if (customer.emailExist(email.getText()) || houseowner.emailExist(email.getText())) {
+            } else if (customer.isEmailExist(email.getText()) || houseowner.isEmailExist(email.getText())) {
                 JOptionPane.showMessageDialog(null, " Email already exist ! ");
-            } else if (customer.identityExist(identityNumber.getText()) || houseowner.identityExist(identityNumber.getText())) {
+            } else if (customer.isIdentityExist(identityNumber.getText()) || houseowner.isIdentityExist(identityNumber.getText())) {
                 JOptionPane.showMessageDialog(null, " User already exist ! ");
 
             } else { // No error so register user.
@@ -398,7 +398,7 @@ public class SignUp extends javax.swing.JFrame {
                     houseowner.setSurname(surname.getText());
                     houseowner.setActivationResult(false);
                     houseowner.setActivationPersonnelId(0);
-                    if (houseowner.register(houseowner)) {
+                    if (houseowner.register()) {
                         JOptionPane.showMessageDialog(null, "Thanks For Join Us , Please Wait Personnel Validation");
                         Home home = new Home();
                         home.show();
@@ -422,7 +422,7 @@ public class SignUp extends javax.swing.JFrame {
                     customer.setSurname(surname.getText());
                     customer.setActivationResult(false);
                     customer.setActivationPersonnelId(0);
-                    if (customer.register(customer)) {
+                    if (customer.register()) {
                         JOptionPane.showMessageDialog(null, "Thanks For Join Us , Please Wait Personnel Validation");
                         Home home = new Home();
                         home.show();

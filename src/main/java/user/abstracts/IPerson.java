@@ -13,7 +13,13 @@ import java.util.List;
  */
 public interface IPerson {
 
-    boolean logIn(Person person);
+    boolean logIn(String email,String password);
 
-    public List<Person> getAllIsActiveFalse();
-}
+    Person getUserByEmail(String email);
+
+    public boolean isEmailExist(String email);
+
+    public boolean isIdentityExist(String identity);
+
+    public boolean updatePassword(String email, String password) ;
+    }

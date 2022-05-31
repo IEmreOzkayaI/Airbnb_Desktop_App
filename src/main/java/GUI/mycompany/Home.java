@@ -11,14 +11,27 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import user.concretes.Customer;
 import user.concretes.HouseOwner;
@@ -36,15 +49,20 @@ public class Home extends javax.swing.JFrame {
      */
     private boolean isAdvertisementsListed = false;
     private boolean isPersonListed = false;
-    static boolean isLogin = false;
-    private static Person person;
-    private static HouseOwner houseOwner;
-    private static Customer customer;
-    private static Personnel personnel;
-    static boolean profileMenuOpen = false;
-    private static String searchKey2="";
-    private static int personID=0;
+    private Person person;
+    private HouseOwner houseOwner;
+    private Customer customer;
+    private Personnel personnel;
+    boolean profileMenuOpen = false;
+    private String searchKey2 = "";
+    private int personID = 0;
     DefaultTableModel dfmodel = new DefaultTableModel();
+    private boolean personnelMenuListed = false;
+    private boolean clickedİsPersonnel = false;
+    PreparedStatement pst;
+    Connection db = Singleton.SingletonConnection.getCon();
+    Statement st;
+    ResultSet rs;
 
     public Home() {
         initComponents();
@@ -52,76 +70,70 @@ public class Home extends javax.swing.JFrame {
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
-        this.isLogin = isLogin;
-
     }
 
-    public Home(boolean isLogin, HouseOwner houseOwner) {
+    public Home(HouseOwner houseOwner) {
         initComponents();
         populateTable();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
         this.houseOwner = houseOwner;
-        this.isLogin = isLogin;
+        personID = houseOwner.getId();
 
-        if (isLogin) {
-            signUp.hide();
-            logIn.hide();
-            searchBar.setBounds(100, 8, 580, 41);
-            addAdvertisement.setBounds(725, 8, 180, 40);
-            profileMenu.setBounds(920, 8, 100, 40);
-            profileMenu.setText(houseOwner.getName().toUpperCase());
-            navbar.setPreferredSize(new Dimension(1049, 56));
-            this.navbar.add(searchBar);
-            this.navbar.add(profileMenu);
-            this.navbar.add(addAdvertisement);
+        signUp.hide();
+        logIn.hide();
+        searchBar.setBounds(100, 8, 580, 41);
+        addAdvertisement.setBounds(725, 8, 180, 40);
+        profileMenu.setBounds(920, 8, 100, 40);
+        profileMenu.setText(houseOwner.getName().toUpperCase());
+        navbar.setPreferredSize(new Dimension(1049, 56));
+        this.navbar.add(searchBar);
+        this.navbar.add(profileMenu);
+        this.navbar.add(addAdvertisement);
 
-        }
     }
 
-    public Home(boolean isLogin, Personnel personnel) {
+    public Home(Personnel personnel) {
         initComponents();
         populateTable();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
         this.personnel = personnel;
-        this.isLogin = isLogin;
+        personID = personnel.getId();
 
-        if (isLogin) {
-
-            PersonnelScreen pScreen = new PersonnelScreen(true, personnel);
-            pScreen.show();
-            this.dispose();
-
-        }
+        signUp.hide();
+        logIn.hide();
+        searchBar.setBounds(100, 8, 580, 41);
+        personnelMenu.setBounds(920, 8, 100, 40);
+        personnelMenu.setText(personnel.getName().toUpperCase());
+        navbar.setPreferredSize(new Dimension(1049, 56));
+        this.navbar.add(searchBar);
+        this.navbar.add(personnelMenu);
     }
 
-    public Home(boolean isLogin, Customer customer) {
+    public Home(Customer customer) {
         initComponents();
         populateTable();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
         this.customer = customer;
-        personID=customer.getId();
-        this.isLogin = isLogin;
+        personID = customer.getId();
 
-        if (isLogin) {
-            signUp.hide();
-            logIn.hide();
-            searchBar.setBounds(100, 8, 580, 41);
-            becameHouseOwner.setBounds(700, 8, 210, 40);
-            profileMenu.setBounds(920, 8, 100, 40);
-            profileMenu.setText(customer.getName().toUpperCase());
+        signUp.hide();
+        logIn.hide();
+        searchBar.setBounds(100, 8, 580, 41);
+        becameHouseOwner.setBounds(700, 8, 210, 40);
+        profileMenu.setBounds(920, 8, 100, 40);
+        profileMenu.setText(customer.getName().toUpperCase());
 
-            navbar.setPreferredSize(new Dimension(1049, 56));
-            this.navbar.add(searchBar);
-            this.navbar.add(profileMenu);
-            this.navbar.add(becameHouseOwner);
+        navbar.setPreferredSize(new Dimension(1049, 56));
+        this.navbar.add(searchBar);
+        this.navbar.add(profileMenu);
+        this.navbar.add(becameHouseOwner);
 
-        }
     }
 
     /**
@@ -140,6 +152,19 @@ public class Home extends javax.swing.JFrame {
         exit = new javax.swing.JButton();
         profileMenu = new javax.swing.JButton();
         addAdvertisement = new javax.swing.JButton();
+        popUpWallet = new javax.swing.JPanel();
+        cardNumber = new javax.swing.JLabel();
+        moneyAmount = new javax.swing.JLabel();
+        cardNumberText = new javax.swing.JTextField();
+        moneyAmountText = new javax.swing.JTextField();
+        depositMoney = new javax.swing.JButton();
+        withdrawMoney = new javax.swing.JButton();
+        balanceMoney = new javax.swing.JButton();
+        personnelMenu = new javax.swing.JButton();
+        personnelMenuDetail = new javax.swing.JPanel();
+        profile1 = new javax.swing.JButton();
+        system = new javax.swing.JButton();
+        exit1 = new javax.swing.JButton();
         content = new javax.swing.JPanel();
         leftSide = new javax.swing.JPanel();
         residenceFilter = new javax.swing.JButton();
@@ -292,6 +317,216 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
+        popUpWallet.setBackground(new java.awt.Color(255, 90, 95));
+        popUpWallet.setMinimumSize(new java.awt.Dimension(500, 250));
+
+        cardNumber.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        cardNumber.setForeground(new java.awt.Color(255, 255, 255));
+        cardNumber.setText("Card Number :");
+
+        moneyAmount.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        moneyAmount.setForeground(new java.awt.Color(255, 255, 255));
+        moneyAmount.setText("Money Amount :");
+
+        cardNumberText.setText("For Deposit / Withdraw");
+        cardNumberText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cardNumberTextActionPerformed(evt);
+            }
+        });
+
+        moneyAmountText.setText("Deposit / Withdraw");
+
+        depositMoney.setBackground(new java.awt.Color(51, 51, 51));
+        depositMoney.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        depositMoney.setForeground(new java.awt.Color(255, 255, 255));
+        depositMoney.setText("Deposit");
+        depositMoney.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        depositMoney.setDefaultCapable(false);
+        depositMoney.setPreferredSize(new java.awt.Dimension(80, 40));
+        depositMoney.setRequestFocusEnabled(false);
+        depositMoney.setVerifyInputWhenFocusTarget(false);
+        depositMoney.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                depositMoneyActionPerformed(evt);
+            }
+        });
+
+        withdrawMoney.setBackground(new java.awt.Color(51, 51, 51));
+        withdrawMoney.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        withdrawMoney.setForeground(new java.awt.Color(255, 255, 255));
+        withdrawMoney.setText("Withdraw");
+        withdrawMoney.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        withdrawMoney.setDefaultCapable(false);
+        withdrawMoney.setPreferredSize(new java.awt.Dimension(80, 40));
+        withdrawMoney.setRequestFocusEnabled(false);
+        withdrawMoney.setVerifyInputWhenFocusTarget(false);
+        withdrawMoney.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                withdrawMoneyActionPerformed(evt);
+            }
+        });
+
+        balanceMoney.setBackground(new java.awt.Color(51, 51, 51));
+        balanceMoney.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        balanceMoney.setForeground(new java.awt.Color(255, 255, 255));
+        balanceMoney.setText("Balance");
+        balanceMoney.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        balanceMoney.setDefaultCapable(false);
+        balanceMoney.setPreferredSize(new java.awt.Dimension(80, 40));
+        balanceMoney.setRequestFocusEnabled(false);
+        balanceMoney.setVerifyInputWhenFocusTarget(false);
+        balanceMoney.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                balanceMoneyMoneyActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout popUpWalletLayout = new javax.swing.GroupLayout(popUpWallet);
+        popUpWallet.setLayout(popUpWalletLayout);
+        popUpWalletLayout.setHorizontalGroup(
+            popUpWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(popUpWalletLayout.createSequentialGroup()
+                .addGap(74, 74, 74)
+                .addGroup(popUpWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(popUpWalletLayout.createSequentialGroup()
+                        .addComponent(depositMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(withdrawMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(balanceMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(popUpWalletLayout.createSequentialGroup()
+                        .addGroup(popUpWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cardNumber)
+                            .addComponent(moneyAmount))
+                        .addGap(23, 23, 23)
+                        .addGroup(popUpWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(moneyAmountText, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cardNumberText, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(72, Short.MAX_VALUE))
+        );
+        popUpWalletLayout.setVerticalGroup(
+            popUpWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(popUpWalletLayout.createSequentialGroup()
+                .addContainerGap(56, Short.MAX_VALUE)
+                .addGroup(popUpWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cardNumber)
+                    .addComponent(cardNumberText, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addGroup(popUpWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(moneyAmount)
+                    .addComponent(moneyAmountText, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
+                .addGroup(popUpWalletLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(depositMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(withdrawMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(balanceMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26))
+        );
+
+        personnelMenu.setBackground(new java.awt.Color(51, 51, 51));
+        personnelMenu.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        personnelMenu.setForeground(new java.awt.Color(255, 255, 255));
+        personnelMenu.setBorder(null);
+        personnelMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        personnelMenu.setDefaultCapable(false);
+        personnelMenu.setPreferredSize(new java.awt.Dimension(100, 40));
+        personnelMenu.setRequestFocusEnabled(false);
+        personnelMenu.setVerifyInputWhenFocusTarget(false);
+        personnelMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                personnelMenuMouseClicked(evt);
+            }
+        });
+        personnelMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                personnelMenuActionPerformed(evt);
+            }
+        });
+
+        personnelMenuDetail.setBackground(new java.awt.Color(51, 51, 51));
+        personnelMenuDetail.setMinimumSize(new java.awt.Dimension(100, 124));
+
+        profile1.setBackground(new java.awt.Color(51, 51, 51));
+        profile1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        profile1.setForeground(new java.awt.Color(255, 255, 255));
+        profile1.setBorder(null);
+        profile1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        profile1.setDefaultCapable(false);
+        profile1.setPreferredSize(new java.awt.Dimension(100, 40));
+        profile1.setRequestFocusEnabled(false);
+        profile1.setVerifyInputWhenFocusTarget(false);
+        profile1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profile1ActionPerformed(evt);
+            }
+        });
+
+        system.setBackground(new java.awt.Color(51, 51, 51));
+        system.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        system.setForeground(new java.awt.Color(255, 255, 255));
+        system.setText("System");
+        system.setBorder(null);
+        system.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        system.setDefaultCapable(false);
+        system.setPreferredSize(new java.awt.Dimension(100, 40));
+        system.setRequestFocusEnabled(false);
+        system.setVerifyInputWhenFocusTarget(false);
+        system.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                systemMouseClicked(evt);
+            }
+        });
+        system.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                systemActionPerformed(evt);
+            }
+        });
+
+        exit1.setBackground(new java.awt.Color(51, 51, 51));
+        exit1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        exit1.setForeground(new java.awt.Color(255, 255, 255));
+        exit1.setText("Exit");
+        exit1.setBorder(null);
+        exit1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        exit1.setDefaultCapable(false);
+        exit1.setPreferredSize(new java.awt.Dimension(100, 40));
+        exit1.setRequestFocusEnabled(false);
+        exit1.setVerifyInputWhenFocusTarget(false);
+        exit1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                exit1MouseClicked(evt);
+            }
+        });
+        exit1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exit1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout personnelMenuDetailLayout = new javax.swing.GroupLayout(personnelMenuDetail);
+        personnelMenuDetail.setLayout(personnelMenuDetailLayout);
+        personnelMenuDetailLayout.setHorizontalGroup(
+            personnelMenuDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, personnelMenuDetailLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(personnelMenuDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(exit1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(system, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(profile1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(214, 214, 214))
+        );
+        personnelMenuDetailLayout.setVerticalGroup(
+            personnelMenuDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(personnelMenuDetailLayout.createSequentialGroup()
+                .addComponent(profile1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(system, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(exit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -299,7 +534,7 @@ public class Home extends javax.swing.JFrame {
         leftSide.setPreferredSize(new java.awt.Dimension(220, 800));
 
         residenceFilter.setBackground(new java.awt.Color(255, 90, 95));
-        residenceFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Residence"));
+        residenceFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Apartment", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         residenceFilter.setFocusPainted(false);
         residenceFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -308,7 +543,7 @@ public class Home extends javax.swing.JFrame {
         });
 
         apartmentFilter.setBackground(new java.awt.Color(255, 90, 95));
-        apartmentFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Manor"));
+        apartmentFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Manor", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         apartmentFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 apartmentFilterActionPerformed(evt);
@@ -316,7 +551,7 @@ public class Home extends javax.swing.JFrame {
         });
 
         villaFilter.setBackground(new java.awt.Color(255, 90, 95));
-        villaFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Villa"));
+        villaFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Villa", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         villaFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 villaFilterActionPerformed(evt);
@@ -324,7 +559,7 @@ public class Home extends javax.swing.JFrame {
         });
 
         treeHouseFilter.setBackground(new java.awt.Color(255, 90, 95));
-        treeHouseFilter.setBorder(javax.swing.BorderFactory.createTitledBorder("Tree House"));
+        treeHouseFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tree House", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         treeHouseFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 treeHouseFilterActionPerformed(evt);
@@ -399,6 +634,7 @@ public class Home extends javax.swing.JFrame {
         searchBar.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         searchBar.setForeground(new java.awt.Color(255, 255, 255));
         searchBar.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        searchBar.setText("Search...");
         searchBar.setToolTipText("Search..");
         searchBar.setBorder(null);
         searchBar.addActionListener(new java.awt.event.ActionListener() {
@@ -438,8 +674,8 @@ public class Home extends javax.swing.JFrame {
 
         searchBar.getAccessibleContext().setAccessibleName("");
 
-        tblAdvertisements.setBackground(new java.awt.Color(153, 153, 153));
         tblAdvertisements.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        tblAdvertisements.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         tblAdvertisements.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -457,6 +693,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         tblAdvertisements.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblAdvertisements.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         tblAdvertisements.setFocusable(false);
         tblAdvertisements.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblAdvertisements.setShowGrid(true);
@@ -561,7 +798,19 @@ public class Home extends javax.swing.JFrame {
 
     private void walletActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_walletActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "wallet clicked");
+        this.rightSide.add(popUpWallet);
+        popUpWallet.setBounds(300, 250, 500, 250);
+        cardNumber.setBounds(60, 50, 150, 40);
+        moneyAmount.setBounds(60, 100, 150, 40);
+
+        cardNumberText.setBounds(230, 50, 200, 40);
+        moneyAmountText.setBounds(230, 100, 200, 40);
+
+        depositMoney.setBounds(60, 175, 90, 40);
+        withdrawMoney.setBounds(190, 175, 120, 40);
+        balanceMoney.setBounds(340, 175, 90, 40);
+
+        popUpWallet.show();
     }//GEN-LAST:event_walletActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
@@ -623,10 +872,10 @@ public class Home extends javax.swing.JFrame {
             houseOwner.setWallet(customer.getWallet());
             houseOwner.setActivationResult(true);
             houseOwner.setIsBlocked(false);
-            houseOwner.registerFromCustomer(houseOwner);
+            houseOwner.registerFromCustomer();
             JOptionPane.showMessageDialog(null, "Welcome " + customer.getName().toUpperCase() + " . Now you can rent your houses.");
             this.dispose();
-            Home home = new Home(true, houseOwner);
+            Home home = new Home(houseOwner);
             home.show();
         }
         if (result == 1) {
@@ -639,22 +888,24 @@ public class Home extends javax.swing.JFrame {
             dfmodel.setRowCount(0);
             dfmodel = (DefaultTableModel) tblAdvertisements.getModel();
             dfmodel.getColumnClass(0);
+
             Advertisement ad = new Advertisement();
             List<Advertisement> advertisementList = ad.getAllAdvertisementsIsActiveTrue();
             for (Advertisement advertisement : advertisementList) {
                 House house = advertisement.getHouse();
                 byte[] icon = house.getHouseIconImg();
                 Image img = Toolkit.getDefaultToolkit().createImage(icon).getScaledInstance(250, 250, Image.SCALE_SMOOTH);
-                ImageIcon imgicn=new ImageIcon(img);
-                Object tbData[] = {advertisement.getId(),advertisement.getHouse().getId(),imgicn, advertisement.getAdvertisementName(), advertisement.getAdvertisementType(), advertisement.getHouse().getHeating(), advertisement.getHouse().getRoomNumber(),
+                ImageIcon imgicn = new ImageIcon(img);
+
+                Object tbData[] = {advertisement.getId(), advertisement.getHouse().getId(), imgicn, advertisement.getAdvertisementName(), advertisement.getAdvertisementType(), advertisement.getHouse().getHeating(), advertisement.getHouse().getRoomNumber(),
                     advertisement.getPrice(), advertisement.getHouse().getLocation(), advertisement.getHouse().getShortDescription()};
 
                 dfmodel.addRow(tbData);
             }
-            if(tblAdvertisements.getColumnName(0).equals("ID")){
+            if (tblAdvertisements.getColumnName(0).equals("ID")) {
                 tblAdvertisements.removeColumn(tblAdvertisements.getColumn("ID"));
             }
-            if(tblAdvertisements.getColumnName(0).equals("HouseID")){
+            if (tblAdvertisements.getColumnName(0).equals("HouseID")) {
                 tblAdvertisements.removeColumn(tblAdvertisements.getColumn("HouseID"));
             }
             tblAdvertisements.setRowHeight(250);
@@ -664,15 +915,17 @@ public class Home extends javax.swing.JFrame {
             isAdvertisementsListed = true;
         }
     }
-    private class ImageRenderer extends DefaultTableCellRenderer{
+
+    private class ImageRenderer extends DefaultTableCellRenderer {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel lphoto = new JLabel((ImageIcon)value);
+            JLabel lphoto = new JLabel((ImageIcon) value);
             return lphoto;
         }
-        
+
     }
+
     private void addAdvertisementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAdvertisementActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_addAdvertisementActionPerformed
@@ -690,107 +943,241 @@ public class Home extends javax.swing.JFrame {
         String searchKey = searchBar.getText();
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
         tblAdvertisements.setRowSorter(tableRowSorter);
-        List<RowFilter<Object,Object>> rfs = 
-             new ArrayList<RowFilter<Object,Object>>(2);
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        List<RowFilter<Object, Object>> rfs
+                = new ArrayList<RowFilter<Object, Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey2));
         tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
     }//GEN-LAST:event_searchBarKeyReleased
 
     private void residenceFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_residenceFilterActionPerformed
         // TODO add your handling code here:
-        if(searchKey2=="apartment"){
-             searchKey2="";
-             residenceFilter.setSelected(false);
-             residenceFilter.setFocusPainted(false);
-        }else{
-            searchKey2="apartment";
-             residenceFilter.setSelected(true);
-             residenceFilter.setFocusPainted(true);
+        if (searchKey2 == "apartment") {
+            searchKey2 = "";
+            residenceFilter.setSelected(false);
+            residenceFilter.setFocusPainted(false);
+        } else {
+            searchKey2 = "apartment";
+            residenceFilter.setSelected(true);
+            residenceFilter.setFocusPainted(true);
         }
         String searchKey = searchBar.getText();
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
         tblAdvertisements.setRowSorter(tableRowSorter);
-        List<RowFilter<Object,Object>> rfs = 
-             new ArrayList<RowFilter<Object,Object>>(2);
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        List<RowFilter<Object, Object>> rfs
+                = new ArrayList<RowFilter<Object, Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey2));
         tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
     }//GEN-LAST:event_residenceFilterActionPerformed
 
     private void treeHouseFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_treeHouseFilterActionPerformed
         // TODO add your handling code here:
-        if(searchKey2=="tree house"){
-             searchKey2="";
-             treeHouseFilter.setSelected(false);
-             treeHouseFilter.setFocusPainted(false);
-        }else{
-            searchKey2="tree house";
+        if (searchKey2 == "tree house") {
+            searchKey2 = "";
+            treeHouseFilter.setSelected(false);
+            treeHouseFilter.setFocusPainted(false);
+        } else {
+            searchKey2 = "tree house";
             treeHouseFilter.setSelected(true);
             treeHouseFilter.setFocusPainted(true);
         }
         String searchKey = searchBar.getText();
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
         tblAdvertisements.setRowSorter(tableRowSorter);
-        List<RowFilter<Object,Object>> rfs = 
-             new ArrayList<RowFilter<Object,Object>>(2);
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        List<RowFilter<Object, Object>> rfs
+                = new ArrayList<RowFilter<Object, Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey2));
         tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
     }//GEN-LAST:event_treeHouseFilterActionPerformed
 
     private void apartmentFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_apartmentFilterActionPerformed
         // TODO add your handling code here:
-        if(searchKey2=="manor"){
-             searchKey2="";
-             apartmentFilter.setSelected(false);
-             apartmentFilter.setFocusPainted(false);
-        }else{
-            searchKey2="manor";
+        if (searchKey2 == "manor") {
+            searchKey2 = "";
+            apartmentFilter.setSelected(false);
+            apartmentFilter.setFocusPainted(false);
+        } else {
+            searchKey2 = "manor";
             apartmentFilter.setSelected(true);
             apartmentFilter.setFocusPainted(true);
         }
         String searchKey = searchBar.getText();
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
         tblAdvertisements.setRowSorter(tableRowSorter);
-        List<RowFilter<Object,Object>> rfs = 
-             new ArrayList<RowFilter<Object,Object>>(2);
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        List<RowFilter<Object, Object>> rfs
+                = new ArrayList<RowFilter<Object, Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey2));
         tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
     }//GEN-LAST:event_apartmentFilterActionPerformed
 
     private void villaFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_villaFilterActionPerformed
         // TODO add your handling code here:
-        if(searchKey2=="villa"){
-             searchKey2="";
-             villaFilter.setSelected(false);
-             villaFilter.setFocusPainted(false);
-        }else{
-            searchKey2="villa";
+        if (searchKey2 == "villa") {
+            searchKey2 = "";
+            villaFilter.setSelected(false);
+            villaFilter.setFocusPainted(false);
+        } else {
+            searchKey2 = "villa";
             villaFilter.setSelected(true);
             villaFilter.setFocusPainted(true);
         }
         String searchKey = searchBar.getText();
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(dfmodel);
         tblAdvertisements.setRowSorter(tableRowSorter);
-        List<RowFilter<Object,Object>> rfs = 
-             new ArrayList<RowFilter<Object,Object>>(2);
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey));
-        rfs.add(RowFilter.regexFilter("(?i)" +searchKey2));
+        List<RowFilter<Object, Object>> rfs
+                = new ArrayList<RowFilter<Object, Object>>(2);
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey));
+        rfs.add(RowFilter.regexFilter("(?i)" + searchKey2));
         tableRowSorter.setRowFilter(RowFilter.andFilter(rfs));
     }//GEN-LAST:event_villaFilterActionPerformed
 
     private void tblAdvertisementsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAdvertisementsMouseClicked
         // TODO add your handling code here:
-        int selectedRow=tblAdvertisements.getSelectedRow();
-        advertisementDetailScreen details=new advertisementDetailScreen();
-        int id = (Integer) tblAdvertisements.getModel().getValueAt(tblAdvertisements.convertRowIndexToModel(selectedRow), 0);
-        int houseid = (Integer) tblAdvertisements.getModel().getValueAt(tblAdvertisements.convertRowIndexToModel(tblAdvertisements.getSelectedRow()), 0);
-        details.viewAdvertisementDetails(id,houseid,personID);
-        details.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        details.setVisible(true);
+        int selectedRow = tblAdvertisements.getSelectedRow();
+        try {
+            pst = db.prepareStatement(Singleton.SingletonConnection.getPersonnelById + "'" + personID + "'");
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                AdvertisementDetailForPersonnel adDetailPersonnel = new AdvertisementDetailForPersonnel();
+                int id = (Integer) tblAdvertisements.getModel().getValueAt(tblAdvertisements.convertRowIndexToModel(selectedRow), 0);
+                int houseid = (Integer) tblAdvertisements.getModel().getValueAt(tblAdvertisements.convertRowIndexToModel(tblAdvertisements.getSelectedRow()), 0);
+                adDetailPersonnel.viewAdvertisementDetails(id, houseid, personID);
+                adDetailPersonnel.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                adDetailPersonnel.setVisible(true);
+
+            } else {
+                advertisementDetailScreen details = new advertisementDetailScreen();
+                int id = (Integer) tblAdvertisements.getModel().getValueAt(tblAdvertisements.convertRowIndexToModel(selectedRow), 0);
+                int houseid = (Integer) tblAdvertisements.getModel().getValueAt(tblAdvertisements.convertRowIndexToModel(tblAdvertisements.getSelectedRow()), 0);
+                details.viewAdvertisementDetails(id, houseid, personID);
+                details.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                details.setVisible(true);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(advertisementDetailScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
     }//GEN-LAST:event_tblAdvertisementsMouseClicked
+
+    private void cardNumberTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cardNumberTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cardNumberTextActionPerformed
+
+    private void depositMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositMoneyActionPerformed
+        // TODO add your handling code here:
+        if (!cardNumberText.getText().isEmpty() && !moneyAmountText.getText().isEmpty()) {
+
+            int moneyAmount = Integer.parseInt(moneyAmountText.getText());
+
+            if (houseOwner == null && customer != null) {
+                JOptionPane.showMessageDialog(null, "You deposit " + customer.getWallet().deposit(moneyAmount) + "$");
+
+            } else {
+                JOptionPane.showMessageDialog(null, "You deposit " + houseOwner.getWallet().deposit(moneyAmount) + "$");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please Fill all Field");
+
+        }
+    }//GEN-LAST:event_depositMoneyActionPerformed
+
+    private void withdrawMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withdrawMoneyActionPerformed
+        // TODO add your handling code here:
+        if (!cardNumberText.getText().isEmpty() && !moneyAmountText.getText().isEmpty()) {
+
+            int moneyAmount = Integer.parseInt(moneyAmountText.getText());
+
+            if (houseOwner == null && customer != null) {
+                if (customer.getWallet().withdraw(moneyAmount) == customer.getWallet().getTotalAmount()) {
+                    JOptionPane.showMessageDialog(null, "You don't have enough money . You have " + customer.getWallet().getTotalAmount() + " $");
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "You Widthdraw " + moneyAmount + " $. You can reach from related card");
+
+                }
+
+            } else {
+                if (houseOwner.getWallet().withdraw(moneyAmount) == houseOwner.getWallet().getTotalAmount()) {
+                    JOptionPane.showMessageDialog(null, "You don't have enough money . You have " + houseOwner.getWallet().getTotalAmount() + " $");
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "You Widthdraw " + moneyAmount + " $. You can reach from related card");
+
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please Fill all Field");
+
+        }
+    }//GEN-LAST:event_withdrawMoneyActionPerformed
+
+    private void balanceMoneyMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_balanceMoneyMoneyActionPerformed
+        // TODO add your handling code here:
+
+        if (houseOwner == null && customer != null) {
+            JOptionPane.showMessageDialog(null, "You have " + customer.getWallet().balance() + " $");
+
+        } else {
+            JOptionPane.showMessageDialog(null, "You have " + houseOwner.getWallet().balance() + " $");
+        }
+    }//GEN-LAST:event_balanceMoneyMoneyActionPerformed
+
+    private void personnelMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_personnelMenuMouseClicked
+        // TODO add your handling code here:
+        if (personnelMenuListed) {
+            this.personnelMenuDetail.hide();
+            this.rightSide.remove(personnelMenuDetail);
+            personnelMenuListed = false;
+            jScrollPane1.setVisible(true);
+
+        } else {
+            this.rightSide.add(personnelMenuDetail);
+            personnelMenuDetail.show();
+
+            this.personnelMenuDetail.add(system);
+            this.personnelMenuDetail.add(exit1);
+
+            personnelMenuDetail.setBounds(947, 95, 100, 120);
+            system.setBounds(0, 0, 100, 40);
+            exit1.setBounds(0, 41, 100, 40);
+            jScrollPane1.setVisible(false);
+            personnelMenuListed = true;
+        }
+    }//GEN-LAST:event_personnelMenuMouseClicked
+
+    private void personnelMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_personnelMenuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_personnelMenuActionPerformed
+
+    private void profile1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_profile1ActionPerformed
+
+    private void systemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_systemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_systemActionPerformed
+
+    private void exit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exit1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exit1ActionPerformed
+
+    private void systemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_systemMouseClicked
+        // TODO add your handling code here:
+        this.dispose();
+        PersonnelScreen pScreen = new PersonnelScreen(personnel);
+        pScreen.show();
+    }//GEN-LAST:event_systemMouseClicked
+
+    private void exit1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exit1MouseClicked
+        // TODO add your handling code here:
+        this.dispose();
+        Home home = new Home();
+        home.show();
+    }//GEN-LAST:event_exit1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -833,23 +1220,36 @@ public class Home extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addAdvertisement;
     private javax.swing.JButton apartmentFilter;
+    private javax.swing.JButton balanceMoney;
     private javax.swing.JButton becameHouseOwner;
+    private javax.swing.JLabel cardNumber;
+    private javax.swing.JTextField cardNumberText;
     private javax.swing.JPanel content;
+    private javax.swing.JButton depositMoney;
     private javax.swing.JButton exit;
+    private javax.swing.JButton exit1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel leftSide;
     private javax.swing.JButton logIn;
+    private javax.swing.JLabel moneyAmount;
+    private javax.swing.JTextField moneyAmountText;
     private javax.swing.JPanel navbar;
+    private javax.swing.JButton personnelMenu;
+    private javax.swing.JPanel personnelMenuDetail;
+    private javax.swing.JPanel popUpWallet;
     private javax.swing.JButton profile;
+    private javax.swing.JButton profile1;
     private javax.swing.JPanel profileDetail;
     private javax.swing.JButton profileMenu;
     private javax.swing.JButton residenceFilter;
     private javax.swing.JPanel rightSide;
     private javax.swing.JTextField searchBar;
     private javax.swing.JButton signUp;
+    private javax.swing.JButton system;
     private javax.swing.JTable tblAdvertisements;
     private javax.swing.JButton treeHouseFilter;
     private javax.swing.JButton villaFilter;
     private javax.swing.JButton wallet;
+    private javax.swing.JButton withdrawMoney;
     // End of variables declaration//GEN-END:variables
 }

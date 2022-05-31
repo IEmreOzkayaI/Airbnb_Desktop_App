@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import user.concretes.Person;
 
 /**
  *
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
 public class Comment implements IComment {
 
     private int id;
-    private int ownerId;
+    private int personId;
     private int advertisementId;
     private String content;
     private int point;
@@ -40,14 +41,14 @@ public class Comment implements IComment {
     }
 
     @Override
-    public void post(Comment comment, int personId, int advertisementId) {
+    public void post() {
         try {
             pst = db.prepareStatement(Singleton.SingletonConnection.insertComment);
             pst.setInt(1, 0);
-            pst.setInt(2, advertisementId);
-            pst.setString(3,getContent());
+            pst.setInt(2, getAdvertisementId());
+            pst.setString(3, getContent());
             pst.setInt(4, getPoint());
-            pst.setInt(5, getOwnerId());
+            pst.setInt(5, getPersonId());
             pst.execute();
 
         } catch (SQLException ex) {
@@ -56,7 +57,7 @@ public class Comment implements IComment {
     }
 
     @Override
-    public void update(Comment comment, int personId, int advertisementId) {
+    public void update() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -67,15 +68,15 @@ public class Comment implements IComment {
             st = db.createStatement();
             rs = st.executeQuery(SingletonConnection.getCommentsById + "'" + advertisementId + "'");
             while (rs.next()) {
-                Comment comm=new Comment();
+                Comment comm = new Comment();
                 comm.setId(rs.getInt("id"));
                 comm.setPoint(rs.getInt("rating"));
                 comm.setContent(rs.getString("comment"));
-                comm.setOwnerId(rs.getInt("person_id"));
+                comm.setPersonId(rs.getInt("person_id"));
                 st2 = db.createStatement();
-                rs2 = st2.executeQuery(SingletonConnection.getPersonById + "'" + comm.getId() + "'");
-                while(rs2.next()){
-                    comm.setUserName(rs2.getString("name")+" "+rs2.getString("surname"));
+                rs2 = st2.executeQuery(SingletonConnection.getPersonById + "'" + comm.getPersonId() + "'");
+                while (rs2.next()) {
+                    comm.setUserName(rs2.getString("name") + " " + rs2.getString("surname"));
                 }
                 CommentList.add(comm);
             }
@@ -87,7 +88,27 @@ public class Comment implements IComment {
 
     @Override
     public void delete(int commentId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            pst = db.prepareStatement(Singleton.SingletonConnection.deleteCommentById + "'" + commentId + "'");
+            pst.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Advertisement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void deleteByPerson(int personId) {
+        try {
+            pst = db.prepareStatement(Singleton.SingletonConnection.deleteCommentByBlockedPersonId + "'" + personId + "'");
+
+            boolean flag = pst.execute();
+            if (flag) {
+                flag = pst.execute();
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Advertisement.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public int getAdvertisementId() {
@@ -100,10 +121,6 @@ public class Comment implements IComment {
 
     public int getId() {
         return id;
-    }
-
-    public int getOwnerId() {
-        return ownerId;
     }
 
     public int getPoint() {
@@ -122,10 +139,6 @@ public class Comment implements IComment {
         this.id = id;
     }
 
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
-    }
-
     public void setPoint(int point) {
         this.point = point;
     }
@@ -142,6 +155,14 @@ public class Comment implements IComment {
      */
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 
 }

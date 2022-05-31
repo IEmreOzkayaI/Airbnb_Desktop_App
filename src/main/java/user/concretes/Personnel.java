@@ -4,17 +4,22 @@
  */
 package user.concretes;
 
+import Singleton.SingletonConnection;
+import advertisement.concretes.Advertisement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import user.abstracts.IPersonnel;
 
 /**
  *
  * @author EmreOzkaya
  */
-public class Personnel extends Person {
+public class Personnel extends Person implements IPersonnel {
 
     private int person_id;
 
@@ -22,6 +27,7 @@ public class Personnel extends Person {
 
     }
 
+    @Override
     public Personnel getUserByEmail(String email) {
         Personnel personnel = new Personnel();
         String getPersonInfoByEmail = " SELECT * FROM persons WHERE email='" + email + "'";
@@ -53,6 +59,89 @@ public class Personnel extends Person {
             Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return personnel;
+    }
+
+    @Override
+    public List<Person> getAllIsBlockTrue() {
+        List<Person> personList = new ArrayList<>();
+        try {
+            st = db.createStatement();
+            rs = st.executeQuery(SingletonConnection.getAllCustomerIsBlockTrue);
+            while (rs.next()) {
+                Person person = new Person();
+                person.setId(rs.getInt("person_id"));
+                Statement st2 = db.createStatement();
+                ResultSet rs2 = st2.executeQuery(SingletonConnection.getPersonById + "'" + person.getId() + "'");
+                while (rs2.next()) {
+                    person.setName(rs2.getString("name"));
+                    person.setSurname(rs2.getString("surname"));
+                    person.setEmail(rs2.getString("email"));
+                    person.setPassword(rs2.getString("password"));
+                    person.setGender(rs2.getString("gender"));
+                    person.setPhoneNumber(rs2.getString("phone_number"));
+                    person.setIdentityNumber(rs2.getString("identity_number"));
+                    person.setBirthDate(rs2.getString("birth_Date"));
+                    person.setActivationPersonnelId(rs2.getInt("activation_personnel_id"));
+                    person.setActivationResult(rs2.getBoolean("activation_result"));
+                }
+
+                personList.add(person);
+            }
+
+            rs = st.executeQuery(SingletonConnection.getAllHouseOwnerIsBlockTrue);
+            while (rs.next()) {
+                Person person = new Person();
+                person.setId(rs.getInt("person_id"));
+                Statement st2 = db.createStatement();
+                ResultSet rs2 = st2.executeQuery(SingletonConnection.getPersonById + "'" + person.getId() + "'");
+                while (rs2.next()) {
+                    person.setName(rs2.getString("name"));
+                    person.setSurname(rs2.getString("surname"));
+                    person.setEmail(rs2.getString("email"));
+                    person.setPassword(rs2.getString("password"));
+                    person.setGender(rs2.getString("gender"));
+                    person.setPhoneNumber(rs2.getString("phone_number"));
+                    person.setIdentityNumber(rs2.getString("identity_number"));
+                    person.setBirthDate(rs2.getString("birth_Date"));
+                    person.setActivationPersonnelId(rs2.getInt("activation_personnel_id"));
+                    person.setActivationResult(rs2.getBoolean("activation_result"));
+                }
+                personList.add(person);
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Advertisement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return personList;
+    }
+
+    @Override
+    public List<Person> getAllIsActiveFalse() {
+        List<Person> personList = new ArrayList<>();
+        try {
+            st = db.createStatement();
+            rs = st.executeQuery(SingletonConnection.getAllPersonIsActiveFalse);
+            while (rs.next()) {
+                Person person = new Person();
+                person.setId(rs.getInt("id"));
+                person.setName(rs.getString("name"));
+                person.setSurname(rs.getString("surname"));
+                person.setEmail(rs.getString("email"));
+                person.setPassword(rs.getString("password"));
+                person.setGender(rs.getString("gender"));
+                person.setPhoneNumber(rs.getString("phone_number"));
+                person.setIdentityNumber(rs.getString("identity_number"));
+                person.setBirthDate(rs.getString("birth_Date"));
+                person.setActivationPersonnelId(rs.getInt("activation_personnel_id"));
+                person.setActivationResult(rs.getBoolean("activation_result"));
+                personList.add(person);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Advertisement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return personList;
     }
 
     public int getPerson_id() {

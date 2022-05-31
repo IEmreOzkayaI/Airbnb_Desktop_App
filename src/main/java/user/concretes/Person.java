@@ -4,6 +4,7 @@
  */
 package user.concretes;
 
+import GUI.mycompany.Home;
 import Singleton.SingletonConnection;
 import advertisement.concretes.Advertisement;
 import java.sql.Connection;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -43,12 +45,18 @@ public class Person implements IPerson {
     public Person() {
     }
 
+    /**
+     *
+     * @param email
+     * @return
+     */
+    @Override
     public Person getUserByEmail(String email) {
         Person person = new Person();
         String getPersonInfoByEmail = " SELECT * FROM persons WHERE email='" + email + "'";
         try {
-            Statement stmt = db.createStatement();
-            ResultSet rs = stmt.executeQuery(getPersonInfoByEmail);
+            st = db.createStatement();
+            rs = st.executeQuery(getPersonInfoByEmail);
             if (rs.next()) {
                 person.setBirthDate(rs.getString("birth_date"));
                 person.setEmail(rs.getString("email"));
@@ -69,12 +77,13 @@ public class Person implements IPerson {
         return person;
     }
 
-    public boolean emailExist(String email) {
+    @Override
+    public boolean isEmailExist(String email) {
         String isUserRegistered = " SELECT email FROM persons WHERE email='" + email + "'";
 
         try {
-            Statement stmt = db.createStatement();
-            ResultSet rs = stmt.executeQuery(isUserRegistered);
+            st = db.createStatement();
+            rs = st.executeQuery(isUserRegistered);
             return rs.next();
 
         } catch (SQLException ex) {
@@ -83,12 +92,13 @@ public class Person implements IPerson {
         return false;
     }
 
-    public boolean identityExist(String identity) {
+    @Override
+    public boolean isIdentityExist(String identity) {
         String isUserRegistered = " SELECT email FROM persons WHERE identity_number='" + identity + "'";
 
         try {
-            Statement stmt = db.createStatement();
-            ResultSet rs = stmt.executeQuery(isUserRegistered);
+            st = db.createStatement();
+            rs = st.executeQuery(isUserRegistered);
             return rs.next();
         } catch (SQLException ex) {
             Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,6 +106,7 @@ public class Person implements IPerson {
         return false;
     }
 
+    @Override
     public boolean updatePassword(String email, String password) {
         String update = " UPDATE persons SET password='" + password + "' WHERE email='" + email + "'";
         Person person = getUserByEmail(email);
@@ -115,37 +126,9 @@ public class Person implements IPerson {
     }
 
     @Override
-    public boolean logIn(Person person) {
+    public boolean logIn(String email, String password) {
 
-        return true;
-    }
-
-    @Override
-    public List<Person> getAllIsActiveFalse() {
-        List<Person> personList = new ArrayList<Person>();
-        try {
-            st = db.createStatement();
-            rs = st.executeQuery(SingletonConnection.getAllPersonIsActiveFalse);
-            while (rs.next()) {
-                Person person = new Person();
-                person.setId(rs.getInt("id"));
-                person.setName(rs.getString("name"));
-                person.setSurname(rs.getString("surname"));
-                person.setEmail(rs.getString("email"));
-                person.setPassword(rs.getString("password"));
-                person.setGender(rs.getString("gender"));
-                person.setPhoneNumber(rs.getString("phone_number"));
-                person.setIdentityNumber(rs.getString("identity_number"));
-                person.setBirthDate(rs.getString("birth_Date"));
-                person.setActivationPersonnelId(rs.getInt("activation_personnel_id"));
-                person.setActivationResult(rs.getBoolean("activation_result"));
-                personList.add(person);
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(Advertisement.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return personList;
+        return false;
     }
 
     public String getBirthDate() {
@@ -235,4 +218,5 @@ public class Person implements IPerson {
     public void setActivationResult(boolean activationResult) {
         this.activationResult = activationResult;
     }
+
 }

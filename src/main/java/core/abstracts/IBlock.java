@@ -12,10 +12,8 @@ import user.concretes.Person;
  * @author EmreOzkaya
  */
 public interface IBlock {
-    void post(Block block);
-    void delete(Block block);
-    void update(Block block);
-    void blockPerson(Person person , Block block);
-    void removeBlock(Person person);
+
+    void blockPerson();
+    void removeBlock();
     
 }

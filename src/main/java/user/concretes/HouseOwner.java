@@ -36,45 +36,44 @@ public class HouseOwner extends Person implements ICustomer {
 
     public HouseOwner() {
         super();
-        wallet = new Wallet(this.getId());
+        wallet = null;
         rentedHouse = null;
         comments = null;
-
         isBlocked = false;
         housesToRent = null;
     }
 
     @Override
-    public boolean register(Person person) {
+    public boolean register() {
         boolean flag = false;
-
+        this.setWallet(new Wallet());
         try {
 
-            PreparedStatement prepstmtPerson = db.prepareStatement(Singleton.SingletonConnection.insertionPerson);
+            PreparedStatement prepstmtPerson = db.prepareStatement(Singleton.SingletonConnection.insertionPerson,Statement.RETURN_GENERATED_KEYS);
             PreparedStatement prepstmtCustomer = db.prepareStatement(Singleton.SingletonConnection.insertionHouseOwner);
 
             // this id is null value because our database id increasing auto.
             // because of a error we couldn't do fk relation on the database table.So we use different values.
-            prepstmtPerson.setInt(1, person.getId());
-            prepstmtPerson.setString(2, person.getName());
-            prepstmtPerson.setString(3, person.getSurname());
-            prepstmtPerson.setString(4, person.getEmail());
-            prepstmtPerson.setString(5, person.getPassword());
-            prepstmtPerson.setString(6, person.getGender());
-            prepstmtPerson.setString(7, person.getPhoneNumber());
-            prepstmtPerson.setString(8, person.getIdentityNumber());
-            prepstmtPerson.setString(9, person.getBirthDate());
-            prepstmtPerson.setInt(10, person.getActivationPersonnelId());
-            prepstmtPerson.setBoolean(11, person.isActivationResult());
-
+            prepstmtPerson.setInt(1, this.getId());
+            prepstmtPerson.setString(2, this.getName());
+            prepstmtPerson.setString(3, this.getSurname());
+            prepstmtPerson.setString(4, this.getEmail());
+            prepstmtPerson.setString(5, this.getPassword());
+            prepstmtPerson.setString(6, this.getGender());
+            prepstmtPerson.setString(7, this.getPhoneNumber());
+            prepstmtPerson.setString(8, this.getIdentityNumber());
+            prepstmtPerson.setString(9, this.getBirthDate());
+            prepstmtPerson.setInt(10, this.getActivationPersonnelId());
+            prepstmtPerson.setBoolean(11, this.isActivationResult());
             prepstmtPerson.execute();
-            Person temp_Person = new Person();
-            int customer_id = temp_Person.getUserByEmail(person.getEmail()).getId();
-            prepstmtCustomer.setInt(1, customer_id);
-            prepstmtCustomer.setInt(2, 0);
+            rs = prepstmtPerson.getGeneratedKeys();
+            while (rs.next()) {
+                this.setId(rs.getInt(1));
+            }
+            prepstmtCustomer.setInt(1, this.getId());
+            prepstmtCustomer.setInt(2, this.getWallet().getId());
             prepstmtCustomer.setInt(3, 0);
-
-            prepstmtCustomer.setBoolean(4, false);
+            prepstmtCustomer.setBoolean(4, this.isIsBlocked());
 
             prepstmtCustomer.execute();
 
@@ -85,18 +84,18 @@ public class HouseOwner extends Person implements ICustomer {
         return flag;
     }
 
-    public boolean registerFromCustomer(HouseOwner houseOwner) {
+    public boolean registerFromCustomer() {
         boolean flag = false;
 
         try {
 
             PreparedStatement prepstmtCustomer = db.prepareStatement(Singleton.SingletonConnection.insertionHouseOwner);
-            PreparedStatement removeCustomer = db.prepareStatement(Singleton.SingletonConnection.deleteFromCustomer + "'" + houseOwner.getId() + "'");
+            PreparedStatement removeCustomer = db.prepareStatement(Singleton.SingletonConnection.deleteFromCustomer + "'" + this.getId() + "'");
 
-            prepstmtCustomer.setInt(1, houseOwner.getId());
-            prepstmtCustomer.setInt(2, houseOwner.getWallet().getId());
-            if (houseOwner.getRentedHouse() != null) {
-                prepstmtCustomer.setInt(3, houseOwner.getRentedHouse().getId());
+            prepstmtCustomer.setInt(1, this.getId());
+            prepstmtCustomer.setInt(2, this.getWallet().getId());
+            if (this.getRentedHouse() != null) {
+                prepstmtCustomer.setInt(3, this.getRentedHouse().getId());
             } else {
                 prepstmtCustomer.setInt(3, 0);
             }
@@ -139,19 +138,17 @@ public class HouseOwner extends Person implements ICustomer {
                 houseOwner.setIsBlocked(rs2.getBoolean("is_blocked"));
                 houseOwner.setPerson_id(rs2.getInt("person_id"));
 //                customer.setRentedHouse(rs2.getString("rented_house_id"));
-                //        customer.setWallet(rs2.getInt("wallet_id"));
-
+                ResultSet rs3 = stmt.executeQuery(Singleton.SingletonConnection.getWalletById + "'" + rs2.getInt("wallet_id") + "'");
+                while (rs3.next()) {
+                    Wallet wallet = new Wallet(rs3.getInt("id"), rs3.getInt("total_amount"));
+                    houseOwner.setWallet(wallet);
+                }
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return houseOwner;
-    }
-
-    @Override
-    public List<Person> getAllIsBlockTrue() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public List<Comment> getComments() {

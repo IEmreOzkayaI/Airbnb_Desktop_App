@@ -5,6 +5,7 @@
 package GUI.mycompany;
 
 import advertisement.concretes.Advertisement;
+import core.concretes.Block;
 import java.awt.Dimension;
 
 import java.awt.Toolkit;
@@ -43,7 +44,8 @@ public class PersonnelScreen extends javax.swing.JFrame {
     Statement st;
     ResultSet rs;
     private boolean isAdvertisementsListed = false;
-    private boolean isPersonListed = false;
+    private boolean isInactivePersonListed = false;
+    private boolean isBlockedPersonsListed = false;
 
     public PersonnelScreen() {
         initComponents();
@@ -54,17 +56,16 @@ public class PersonnelScreen extends javax.swing.JFrame {
 
     }
 
-    public PersonnelScreen(boolean isLogin, Personnel personnel) {
+    public PersonnelScreen(Personnel personnel) {
         initComponents();
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width / 2 - getWidth() / 2, size.height / 2 - getHeight() / 2);
         this.personnel = personnel;
         this.isLogin = isLogin;
-        if (isLogin) {
-            profileMenu.setText(personnel.getName().toUpperCase());
-            getAdvertisementDatas();
-        }
+        profileMenu.setText(personnel.getName().toUpperCase());
+        getAdvertisementDatas();
+
     }
 
     /**
@@ -77,65 +78,46 @@ public class PersonnelScreen extends javax.swing.JFrame {
     private void initComponents() {
 
         profileDetail = new javax.swing.JPanel();
-        profile = new javax.swing.JButton();
-        wallet = new javax.swing.JButton();
+        homePage = new javax.swing.JButton();
         exit = new javax.swing.JButton();
-        personScrool = new javax.swing.JScrollPane();
-        persons = new javax.swing.JTable();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        blockedPersons = new javax.swing.JTable();
-        validate = new javax.swing.JButton();
-        reject = new javax.swing.JButton();
+        inactivePersonScrool = new javax.swing.JScrollPane();
+        inactivePersonsList = new javax.swing.JTable();
+        blockedPeronScool = new javax.swing.JScrollPane();
+        blockedPersonsList = new javax.swing.JTable();
         content = new javax.swing.JPanel();
         personnelScreen = new javax.swing.JPanel();
         navbar1 = new javax.swing.JPanel();
         profileMenu = new javax.swing.JButton();
-        Advertisements = new javax.swing.JButton();
-        persons1 = new javax.swing.JButton();
-        persons2 = new javax.swing.JButton();
-        advertisementScrool = new javax.swing.JScrollPane();
-        advertisements = new javax.swing.JTable();
+        inactiveAdvertisements = new javax.swing.JButton();
+        inactivePersons = new javax.swing.JButton();
+        blockedPersons = new javax.swing.JButton();
+        inactiveAdvertisementsScrool = new javax.swing.JScrollPane();
+        inactiveAdvertisementsList = new javax.swing.JTable();
 
         profileDetail.setBackground(new java.awt.Color(51, 51, 51));
         profileDetail.setMinimumSize(new java.awt.Dimension(100, 124));
         profileDetail.setPreferredSize(new java.awt.Dimension(100, 124));
 
-        profile.setBackground(new java.awt.Color(51, 51, 51));
-        profile.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        profile.setForeground(new java.awt.Color(255, 255, 255));
-        profile.setText("Profile");
-        profile.setBorder(null);
-        profile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        profile.setDefaultCapable(false);
-        profile.setPreferredSize(new java.awt.Dimension(100, 40));
-        profile.setRequestFocusEnabled(false);
-        profile.setVerifyInputWhenFocusTarget(false);
-        profile.addActionListener(new java.awt.event.ActionListener() {
+        homePage.setBackground(new java.awt.Color(51, 51, 51));
+        homePage.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        homePage.setForeground(new java.awt.Color(255, 255, 255));
+        homePage.setText("Home");
+        homePage.setBorder(null);
+        homePage.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        homePage.setDefaultCapable(false);
+        homePage.setPreferredSize(new java.awt.Dimension(100, 40));
+        homePage.setRequestFocusEnabled(false);
+        homePage.setVerifyInputWhenFocusTarget(false);
+        homePage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                profileActionPerformed(evt);
-            }
-        });
-
-        wallet.setBackground(new java.awt.Color(51, 51, 51));
-        wallet.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        wallet.setForeground(new java.awt.Color(255, 255, 255));
-        wallet.setText("Wallet");
-        wallet.setBorder(null);
-        wallet.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        wallet.setDefaultCapable(false);
-        wallet.setPreferredSize(new java.awt.Dimension(100, 40));
-        wallet.setRequestFocusEnabled(false);
-        wallet.setVerifyInputWhenFocusTarget(false);
-        wallet.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                walletActionPerformed(evt);
+                homePageActionPerformed(evt);
             }
         });
 
         exit.setBackground(new java.awt.Color(51, 51, 51));
         exit.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         exit.setForeground(new java.awt.Color(255, 255, 255));
-        exit.setText("Log In");
+        exit.setText("Exit");
         exit.setBorder(null);
         exit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         exit.setDefaultCapable(false);
@@ -156,29 +138,27 @@ public class PersonnelScreen extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(profileDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(exit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(wallet, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(profile, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(homePage, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(214, 214, 214))
         );
         profileDetailLayout.setVerticalGroup(
             profileDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(profileDetailLayout.createSequentialGroup()
-                .addComponent(profile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(wallet, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(40, 40, 40)
+                .addComponent(homePage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 4, Short.MAX_VALUE)
                 .addComponent(exit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
 
         profileDetail.getAccessibleContext().setAccessibleName("");
 
-        personScrool.setPreferredSize(new java.awt.Dimension(1320, 406));
+        inactivePersonScrool.setPreferredSize(new java.awt.Dimension(1320, 406));
 
-        persons.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        persons.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        persons.setRowHeight(50);
-        persons.setModel(new javax.swing.table.DefaultTableModel(
+        inactivePersonsList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        inactivePersonsList.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        inactivePersonsList.setRowHeight(50);
+        inactivePersonsList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -194,83 +174,58 @@ public class PersonnelScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        persons.getTableHeader().setReorderingAllowed(false);
-        persons.addMouseListener(new java.awt.event.MouseAdapter() {
+        inactivePersonsList.getTableHeader().setReorderingAllowed(false);
+        inactivePersonsList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                personsMouseClicked(evt);
+                inactivePersonsListMouseClicked(evt);
             }
         });
-        personScrool.setViewportView(persons);
-        if (persons.getColumnModel().getColumnCount() > 0) {
-            persons.getColumnModel().getColumn(0).setResizable(false);
-            persons.getColumnModel().getColumn(1).setResizable(false);
-            persons.getColumnModel().getColumn(2).setResizable(false);
-            persons.getColumnModel().getColumn(3).setResizable(false);
-            persons.getColumnModel().getColumn(4).setResizable(false);
-            persons.getColumnModel().getColumn(5).setResizable(false);
-            persons.getColumnModel().getColumn(6).setResizable(false);
+        inactivePersonScrool.setViewportView(inactivePersonsList);
+        if (inactivePersonsList.getColumnModel().getColumnCount() > 0) {
+            inactivePersonsList.getColumnModel().getColumn(0).setResizable(false);
+            inactivePersonsList.getColumnModel().getColumn(1).setResizable(false);
+            inactivePersonsList.getColumnModel().getColumn(2).setResizable(false);
+            inactivePersonsList.getColumnModel().getColumn(3).setResizable(false);
+            inactivePersonsList.getColumnModel().getColumn(4).setResizable(false);
+            inactivePersonsList.getColumnModel().getColumn(5).setResizable(false);
+            inactivePersonsList.getColumnModel().getColumn(6).setResizable(false);
         }
 
-        jScrollPane3.setPreferredSize(new java.awt.Dimension(1320, 406));
+        blockedPeronScool.setPreferredSize(new java.awt.Dimension(1320, 406));
 
-        blockedPersons.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        blockedPersons.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        blockedPersons.setModel(new javax.swing.table.DefaultTableModel(
+        blockedPersonsList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        blockedPersonsList.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        blockedPersonsList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Name", "Type"
+                "Id", "Name", "Surname", "Email", "Block Reason", "Block Time"
             }
-        ));
-        blockedPersons.getTableHeader().setReorderingAllowed(false);
-        jScrollPane3.setViewportView(blockedPersons);
-        if (blockedPersons.getColumnModel().getColumnCount() > 0) {
-            blockedPersons.getColumnModel().getColumn(0).setResizable(false);
-            blockedPersons.getColumnModel().getColumn(0).setHeaderValue("Name");
-            blockedPersons.getColumnModel().getColumn(1).setResizable(false);
-            blockedPersons.getColumnModel().getColumn(1).setHeaderValue("Surname");
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        blockedPersonsList.getTableHeader().setReorderingAllowed(false);
+        blockedPersonsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                blockedPersonsListMouseClicked(evt);
+            }
+        });
+        blockedPeronScool.setViewportView(blockedPersonsList);
+        if (blockedPersonsList.getColumnModel().getColumnCount() > 0) {
+            blockedPersonsList.getColumnModel().getColumn(0).setResizable(false);
+            blockedPersonsList.getColumnModel().getColumn(1).setResizable(false);
+            blockedPersonsList.getColumnModel().getColumn(2).setResizable(false);
+            blockedPersonsList.getColumnModel().getColumn(3).setResizable(false);
+            blockedPersonsList.getColumnModel().getColumn(4).setResizable(false);
+            blockedPersonsList.getColumnModel().getColumn(5).setResizable(false);
         }
-
-        validate.setBackground(new java.awt.Color(51, 51, 51));
-        validate.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        validate.setForeground(new java.awt.Color(255, 255, 255));
-        validate.setBorder(null);
-        validate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        validate.setDefaultCapable(false);
-        validate.setPreferredSize(new java.awt.Dimension(100, 40));
-        validate.setRequestFocusEnabled(false);
-        validate.setVerifyInputWhenFocusTarget(false);
-        validate.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                validateMouseClicked(evt);
-            }
-        });
-        validate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                validateActionPerformed(evt);
-            }
-        });
-
-        reject.setBackground(new java.awt.Color(51, 51, 51));
-        reject.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        reject.setForeground(new java.awt.Color(255, 255, 255));
-        reject.setBorder(null);
-        reject.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        reject.setDefaultCapable(false);
-        reject.setPreferredSize(new java.awt.Dimension(100, 40));
-        reject.setRequestFocusEnabled(false);
-        reject.setVerifyInputWhenFocusTarget(false);
-        reject.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                rejectMouseClicked(evt);
-            }
-        });
-        reject.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rejectActionPerformed(evt);
-            }
-        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -301,51 +256,51 @@ public class PersonnelScreen extends javax.swing.JFrame {
             }
         });
 
-        Advertisements.setBackground(new java.awt.Color(153, 153, 153));
-        Advertisements.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        Advertisements.setForeground(new java.awt.Color(255, 255, 255));
-        Advertisements.setText("Advertisements");
-        Advertisements.setBorder(null);
-        Advertisements.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        Advertisements.setDefaultCapable(false);
-        Advertisements.setPreferredSize(new java.awt.Dimension(160, 40));
-        Advertisements.setRequestFocusEnabled(false);
-        Advertisements.setVerifyInputWhenFocusTarget(false);
-        Advertisements.addActionListener(new java.awt.event.ActionListener() {
+        inactiveAdvertisements.setBackground(new java.awt.Color(153, 153, 153));
+        inactiveAdvertisements.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        inactiveAdvertisements.setForeground(new java.awt.Color(255, 255, 255));
+        inactiveAdvertisements.setText("Advertisements");
+        inactiveAdvertisements.setBorder(null);
+        inactiveAdvertisements.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        inactiveAdvertisements.setDefaultCapable(false);
+        inactiveAdvertisements.setPreferredSize(new java.awt.Dimension(160, 40));
+        inactiveAdvertisements.setRequestFocusEnabled(false);
+        inactiveAdvertisements.setVerifyInputWhenFocusTarget(false);
+        inactiveAdvertisements.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AdvertisementsActionPerformed(evt);
+                inactiveAdvertisementsActionPerformed(evt);
             }
         });
 
-        persons1.setBackground(new java.awt.Color(153, 153, 153));
-        persons1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        persons1.setForeground(new java.awt.Color(255, 255, 255));
-        persons1.setText("Persons");
-        persons1.setBorder(null);
-        persons1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        persons1.setDefaultCapable(false);
-        persons1.setPreferredSize(new java.awt.Dimension(160, 40));
-        persons1.setRequestFocusEnabled(false);
-        persons1.setVerifyInputWhenFocusTarget(false);
-        persons1.addActionListener(new java.awt.event.ActionListener() {
+        inactivePersons.setBackground(new java.awt.Color(153, 153, 153));
+        inactivePersons.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        inactivePersons.setForeground(new java.awt.Color(255, 255, 255));
+        inactivePersons.setText("Persons");
+        inactivePersons.setBorder(null);
+        inactivePersons.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        inactivePersons.setDefaultCapable(false);
+        inactivePersons.setPreferredSize(new java.awt.Dimension(160, 40));
+        inactivePersons.setRequestFocusEnabled(false);
+        inactivePersons.setVerifyInputWhenFocusTarget(false);
+        inactivePersons.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                persons1ActionPerformed(evt);
+                inactivePersonsActionPerformed(evt);
             }
         });
 
-        persons2.setBackground(new java.awt.Color(153, 153, 153));
-        persons2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        persons2.setForeground(new java.awt.Color(255, 255, 255));
-        persons2.setText("Blocked Persons");
-        persons2.setBorder(null);
-        persons2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        persons2.setDefaultCapable(false);
-        persons2.setPreferredSize(new java.awt.Dimension(160, 40));
-        persons2.setRequestFocusEnabled(false);
-        persons2.setVerifyInputWhenFocusTarget(false);
-        persons2.addActionListener(new java.awt.event.ActionListener() {
+        blockedPersons.setBackground(new java.awt.Color(153, 153, 153));
+        blockedPersons.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        blockedPersons.setForeground(new java.awt.Color(255, 255, 255));
+        blockedPersons.setText("Blocked Persons");
+        blockedPersons.setBorder(null);
+        blockedPersons.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        blockedPersons.setDefaultCapable(false);
+        blockedPersons.setPreferredSize(new java.awt.Dimension(160, 40));
+        blockedPersons.setRequestFocusEnabled(false);
+        blockedPersons.setVerifyInputWhenFocusTarget(false);
+        blockedPersons.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                persons2ActionPerformed(evt);
+                blockedPersonsActionPerformed(evt);
             }
         });
 
@@ -355,11 +310,11 @@ public class PersonnelScreen extends javax.swing.JFrame {
             navbar1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, navbar1Layout.createSequentialGroup()
                 .addGap(112, 112, 112)
-                .addComponent(persons2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(blockedPersons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(266, 266, 266)
-                .addComponent(persons1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Advertisements, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(inactivePersons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 269, Short.MAX_VALUE)
+                .addComponent(inactiveAdvertisements, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51)
                 .addComponent(profileMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
@@ -370,19 +325,19 @@ public class PersonnelScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(navbar1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(navbar1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(Advertisements, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(persons1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(persons2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(inactiveAdvertisements, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(inactivePersons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(blockedPersons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(profileMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6))
         );
 
-        advertisementScrool.setPreferredSize(new java.awt.Dimension(1320, 406));
+        inactiveAdvertisementsScrool.setPreferredSize(new java.awt.Dimension(1320, 406));
 
-        advertisements.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        advertisements.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        advertisements.setRowHeight(50);
-        advertisements.setModel(new javax.swing.table.DefaultTableModel(
+        inactiveAdvertisementsList.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        inactiveAdvertisementsList.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        inactiveAdvertisementsList.setRowHeight(50);
+        inactiveAdvertisementsList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -391,28 +346,28 @@ public class PersonnelScreen extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, true, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        advertisements.getTableHeader().setReorderingAllowed(false);
-        advertisements.addMouseListener(new java.awt.event.MouseAdapter() {
+        inactiveAdvertisementsList.getTableHeader().setReorderingAllowed(false);
+        inactiveAdvertisementsList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                advertisementsMouseClicked(evt);
+                inactiveAdvertisementsListMouseClicked(evt);
             }
         });
-        advertisementScrool.setViewportView(advertisements);
-        if (advertisements.getColumnModel().getColumnCount() > 0) {
-            advertisements.getColumnModel().getColumn(0).setResizable(false);
-            advertisements.getColumnModel().getColumn(1).setResizable(false);
-            advertisements.getColumnModel().getColumn(2).setResizable(false);
-            advertisements.getColumnModel().getColumn(3).setResizable(false);
-            advertisements.getColumnModel().getColumn(4).setResizable(false);
-            advertisements.getColumnModel().getColumn(5).setResizable(false);
-            advertisements.getColumnModel().getColumn(6).setResizable(false);
+        inactiveAdvertisementsScrool.setViewportView(inactiveAdvertisementsList);
+        if (inactiveAdvertisementsList.getColumnModel().getColumnCount() > 0) {
+            inactiveAdvertisementsList.getColumnModel().getColumn(0).setResizable(false);
+            inactiveAdvertisementsList.getColumnModel().getColumn(1).setResizable(false);
+            inactiveAdvertisementsList.getColumnModel().getColumn(2).setResizable(false);
+            inactiveAdvertisementsList.getColumnModel().getColumn(3).setResizable(false);
+            inactiveAdvertisementsList.getColumnModel().getColumn(4).setResizable(false);
+            inactiveAdvertisementsList.getColumnModel().getColumn(5).setResizable(false);
+            inactiveAdvertisementsList.getColumnModel().getColumn(6).setResizable(false);
         }
 
         javax.swing.GroupLayout personnelScreenLayout = new javax.swing.GroupLayout(personnelScreen);
@@ -423,7 +378,7 @@ public class PersonnelScreen extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(personnelScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(navbar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(advertisementScrool, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(inactiveAdvertisementsScrool, javax.swing.GroupLayout.DEFAULT_SIZE, 1320, Short.MAX_VALUE))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         personnelScreenLayout.setVerticalGroup(
@@ -431,9 +386,9 @@ public class PersonnelScreen extends javax.swing.JFrame {
             .addGroup(personnelScreenLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(navbar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(advertisementScrool, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(inactiveAdvertisementsScrool, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout contentLayout = new javax.swing.GroupLayout(content);
@@ -471,20 +426,19 @@ public class PersonnelScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void profileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileActionPerformed
+    private void homePageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homePageActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "profile clicked");
+        this.dispose();
+        Home home = new Home(personnel);
+        home.show();
 
-    }//GEN-LAST:event_profileActionPerformed
-
-    private void walletActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_walletActionPerformed
-        // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "wallet clicked");
-    }//GEN-LAST:event_walletActionPerformed
+    }//GEN-LAST:event_homePageActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "exit clicked");
+        this.dispose();
+        Home home = new Home();
+        home.show();
 
     }//GEN-LAST:event_exitActionPerformed
 
@@ -498,41 +452,93 @@ public class PersonnelScreen extends javax.swing.JFrame {
             this.profileDetail.hide();
             this.personnelScreen.remove(profileDetail);
             profileMenuOpen = false;
-            advertisementScrool.setVisible(true);
+            inactiveAdvertisementsScrool.setVisible(true);
 
         } else {
             this.personnelScreen.add(profileDetail);
             profileDetail.show();
 
-            profileDetail.setBounds(1211, 85, 100, 120);
-            profile.setBounds(0, 0, 100, 40);
-            wallet.setBounds(0, 41, 100, 40);
-            exit.setBounds(0, 82, 100, 40);
-            advertisementScrool.setVisible(false);
+            profileDetail.setBounds(1211, 90, 100, 120);
+            homePage.setBounds(0, 0, 100, 40);
+            exit.setBounds(0, 41, 100, 40);
+            inactiveAdvertisementsScrool.setVisible(false);
+            inactivePersonScrool.setVisible(false);
+            blockedPeronScool.setVisible(false);
+
             profileMenuOpen = true;
         }
     }//GEN-LAST:event_profileMenuMouseClicked
 
-    private void AdvertisementsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdvertisementsActionPerformed
+    private void inactiveAdvertisementsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inactiveAdvertisementsActionPerformed
         // TODO add your handling code here:
 
-        personScrool.hide();
-        personnelScreen.add(advertisementScrool);
+        inactivePersonScrool.hide();
+        blockedPeronScool.hide();
+        personnelScreen.add(inactiveAdvertisementsScrool);
 
-        advertisementScrool.show();
-        advertisementScrool.setBounds(30, 100, 1320, 650);
-        advertisements.setBounds(0, 0, 1320, 650);
+        inactiveAdvertisementsScrool.show();
+        inactiveAdvertisementsScrool.setBounds(32, 100, 1320, 650);
+        inactiveAdvertisementsList.setBounds(0, 0, 1320, 650);
         getAdvertisementDatas();
 
-    }//GEN-LAST:event_AdvertisementsActionPerformed
+    }//GEN-LAST:event_inactiveAdvertisementsActionPerformed
+
+
+    private void inactivePersonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inactivePersonsActionPerformed
+        inactiveAdvertisementsScrool.hide();
+        blockedPeronScool.hide();
+        personnelScreen.add(inactivePersonScrool);
+
+        inactivePersonScrool.show();
+        inactivePersonScrool.setBounds(32, 100, 1320, 650);
+        inactivePersonsList.setBounds(0, 0, 1320, 650);
+        getInactivePersonsData();
+    }//GEN-LAST:event_inactivePersonsActionPerformed
+
+
+    private void blockedPersonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blockedPersonsActionPerformed
+        inactiveAdvertisementsScrool.hide();
+        inactivePersonScrool.hide();
+        personnelScreen.add(blockedPeronScool);
+
+        blockedPeronScool.show();
+        blockedPeronScool.setBounds(32, 100, 1320, 650);
+        blockedPersonsList.setBounds(0, 0, 1320, 650);
+        getBlockedPersonsData();
+    }//GEN-LAST:event_blockedPersonsActionPerformed
+
+    private void getInactivePersonsData() {
+        if (!isInactivePersonListed) {
+            isAdvertisementsListed = false;
+            isBlockedPersonsListed = false;
+            isInactivePersonListed = true;
+            profileMenuOpen = false;
+            this.profileDetail.hide();
+
+            List<Person> personList = personnel.getAllIsActiveFalse();
+
+            DefaultTableModel tblModel = (DefaultTableModel) inactivePersonsList.getModel();
+            tblModel.setRowCount(0);
+
+            for (Person personData : personList) {
+                Object tbData[] = {personData.getId(), personData.getName(), personData.getSurname(), personData.getEmail(), personData.getIdentityNumber(), personData.getBirthDate(), personData.getGender()};
+
+                tblModel.addRow(tbData);
+            }
+        }
+    }
 
     private void getAdvertisementDatas() {
         if (!isAdvertisementsListed) {
-            isPersonListed = false;
+            isInactivePersonListed = false;
+            isBlockedPersonsListed = false;
+            isAdvertisementsListed = true;
+            profileMenuOpen = false;
+            this.profileDetail.hide();
             Advertisement ad = new Advertisement();
             List<Advertisement> advertisementList = ad.getAllAdvertisementsIsActiveFalse();
-            
-            DefaultTableModel tblModel = (DefaultTableModel) advertisements.getModel();
+
+            DefaultTableModel tblModel = (DefaultTableModel) inactiveAdvertisementsList.getModel();
             tblModel.setRowCount(0);
 
             for (Advertisement advertisement : advertisementList) {
@@ -542,45 +548,43 @@ public class PersonnelScreen extends javax.swing.JFrame {
 
                 tblModel.addRow(tbData);
             }
-            isAdvertisementsListed = true;
         }
     }
 
-    private void persons1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_persons1ActionPerformed
-        advertisementScrool.hide();
-        personnelScreen.add(personScrool);
-
-        personScrool.show();
-        personScrool.setBounds(30, 100, 1320, 650);
-        persons.setBounds(0, 0, 1320, 650);
-        getPersonsDatas();
-    }//GEN-LAST:event_persons1ActionPerformed
-
-    private void getPersonsDatas() {
-        if (!isPersonListed) {
+    private void getBlockedPersonsData() {
+        if (!isBlockedPersonsListed) {
+            isBlockedPersonsListed = true;
+            isInactivePersonListed = false;
             isAdvertisementsListed = false;
-            Person person = new Person();
-            List<Person> personList = person.getAllIsActiveFalse();
+                        profileMenuOpen = false;
+            this.profileDetail.hide();
+            List<Person> personList = personnel.getAllIsBlockTrue();
 
-            DefaultTableModel tblModel = (DefaultTableModel) persons.getModel();
+            DefaultTableModel tblModel = (DefaultTableModel) blockedPersonsList.getModel();
             tblModel.setRowCount(0);
 
             for (Person personData : personList) {
-                Object tbData[] = {personData.getId(), personData.getName(), personData.getSurname(), personData.getEmail(), personData.getIdentityNumber(), personData.getBirthDate(), personData.getGender()};
+                try {
+                    st = db.createStatement();
+                    rs = st.executeQuery(Singleton.SingletonConnection.getBlockedPersonByID + "'" + personData.getId() + "'");
+                    while (rs.next()) {
 
-                tblModel.addRow(tbData);
+                        Object tbData[] = {personData.getId(), personData.getName(), personData.getSurname(), personData.getEmail(), rs.getString("reason"), rs.getString("block_time")};
+                        tblModel.addRow(tbData);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(PersonnelScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
-            isPersonListed = true;
+
         }
     }
-    private void persons2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_persons2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_persons2ActionPerformed
 
-    private void personsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_personsMouseClicked
+    private void inactivePersonsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inactivePersonsListMouseClicked
         // TODO add your handling code here:
-        int index = persons.getSelectedRow();
-        TableModel model = persons.getModel();
+        int index = inactivePersonsList.getSelectedRow();
+        TableModel model = inactivePersonsList.getModel();
         String id = model.getValueAt(index, 0).toString();
         String updatePersonValidation = "UPDATE persons SET activation_result=true , activation_personnel_id='" + personnel.getPerson_id() + "' WHERE id='" + id + "'";
         String deletePerson = "DELETE FROM persons WHERE id='" + id + "'";
@@ -590,8 +594,8 @@ public class PersonnelScreen extends javax.swing.JFrame {
             try {
                 pst = db.prepareStatement(updatePersonValidation);
                 pst.execute();
-                isPersonListed = false;
-                getPersonsDatas();
+                isInactivePersonListed = false;
+                getInactivePersonsData();
 
             } catch (SQLException ex) {
                 Logger.getLogger(PersonnelScreen.class
@@ -602,20 +606,20 @@ public class PersonnelScreen extends javax.swing.JFrame {
             try {
                 pst = db.prepareStatement(deletePerson);
                 pst.execute();
-                isPersonListed = false;
-                getPersonsDatas();
+                isInactivePersonListed = false;
+                getInactivePersonsData();
 
             } catch (SQLException ex) {
                 Logger.getLogger(PersonnelScreen.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_personsMouseClicked
+    }//GEN-LAST:event_inactivePersonsListMouseClicked
 
-    private void advertisementsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advertisementsMouseClicked
+    private void inactiveAdvertisementsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inactiveAdvertisementsListMouseClicked
         // TODO add your handling code here:
-        int index = advertisements.getSelectedRow();
-        TableModel model = advertisements.getModel();
+        int index = inactiveAdvertisementsList.getSelectedRow();
+        TableModel model = inactiveAdvertisementsList.getModel();
         String id = model.getValueAt(index, 0).toString();
         Advertisement ad = new Advertisement();
 
@@ -630,23 +634,22 @@ public class PersonnelScreen extends javax.swing.JFrame {
             getAdvertisementDatas();
 
         }
-    }//GEN-LAST:event_advertisementsMouseClicked
+    }//GEN-LAST:event_inactiveAdvertisementsListMouseClicked
 
-    private void validateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_validateActionPerformed
+    private void blockedPersonsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_blockedPersonsListMouseClicked
+        int index = blockedPersonsList.getSelectedRow();
+        TableModel model = blockedPersonsList.getModel();
+        String id = model.getValueAt(index, 0).toString();
+        Block block = new Block();
+        block.setPersonId(Integer.parseInt(id));
 
-    private void validateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_validateMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_validateMouseClicked
-
-    private void rejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rejectActionPerformed
-
-    private void rejectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rejectMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rejectMouseClicked
+        int result = JOptionPane.showConfirmDialog(null, "Do you want to Remove Block");
+        if (result == 0) {
+            block.removeBlock();
+            isBlockedPersonsListed = false;
+            getBlockedPersonsData();
+        }
+    }//GEN-LAST:event_blockedPersonsListMouseClicked
 
     /**
      * @param args the command line arguments
@@ -697,24 +700,21 @@ public class PersonnelScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Advertisements;
-    private javax.swing.JScrollPane advertisementScrool;
-    private javax.swing.JTable advertisements;
-    private javax.swing.JTable blockedPersons;
+    private javax.swing.JScrollPane blockedPeronScool;
+    private javax.swing.JButton blockedPersons;
+    private javax.swing.JTable blockedPersonsList;
     private javax.swing.JPanel content;
     private javax.swing.JButton exit;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton homePage;
+    private javax.swing.JButton inactiveAdvertisements;
+    private javax.swing.JTable inactiveAdvertisementsList;
+    private javax.swing.JScrollPane inactiveAdvertisementsScrool;
+    private javax.swing.JScrollPane inactivePersonScrool;
+    private javax.swing.JButton inactivePersons;
+    private javax.swing.JTable inactivePersonsList;
     private javax.swing.JPanel navbar1;
-    private javax.swing.JScrollPane personScrool;
     private javax.swing.JPanel personnelScreen;
-    private javax.swing.JTable persons;
-    private javax.swing.JButton persons1;
-    private javax.swing.JButton persons2;
-    private javax.swing.JButton profile;
     private javax.swing.JPanel profileDetail;
     private javax.swing.JButton profileMenu;
-    private javax.swing.JButton reject;
-    private javax.swing.JButton validate;
-    private javax.swing.JButton wallet;
     // End of variables declaration//GEN-END:variables
 }

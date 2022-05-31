@@ -7,14 +7,15 @@ package advertisement.abstracts;
 import advertisement.concretes.Comment;
 import java.util.ArrayList;
 import java.util.List;
+import user.concretes.Person;
 
 /**
  *
  * @author EmreOzkaya
  */
 public interface IComment {
-    void post(Comment comment , int personId, int advertisementId);
-    void update(Comment comment , int personId, int advertisementId);
+    void post();
+    void update();
     ArrayList<Comment> getAllComments();
     void delete(int commentId);
 }
