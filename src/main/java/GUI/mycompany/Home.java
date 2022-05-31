@@ -792,7 +792,16 @@ public class Home extends javax.swing.JFrame {
 
     private void profileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "profile clicked");
+        if (houseOwner == null) {
+            ProfileScreen pf = new ProfileScreen(customer);
+            this.dispose();
+            pf.show();
+        } else {
+            ProfileScreen pf = new ProfileScreen(houseOwner);
+            this.dispose();
+            pf.show();
+        }
+
 
     }//GEN-LAST:event_profileActionPerformed
 
@@ -913,6 +922,7 @@ public class Home extends javax.swing.JFrame {
             tblAdvertisements.getColumnModel().getColumn(0).setPreferredWidth(250);
             tblAdvertisements.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
             isAdvertisementsListed = true;
+
         }
     }
 
@@ -1055,9 +1065,11 @@ public class Home extends javax.swing.JFrame {
                 details.viewAdvertisementDetails(id, houseid, personID);
                 details.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 details.setVisible(true);
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(advertisementDetailScreen.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(advertisementDetailScreen.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
 
@@ -1193,16 +1205,24 @@ public class Home extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>

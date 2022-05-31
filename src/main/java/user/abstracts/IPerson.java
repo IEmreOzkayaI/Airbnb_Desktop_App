@@ -16,6 +16,7 @@ public interface IPerson {
     boolean logIn(String email,String password);
 
     Person getUserByEmail(String email);
+    boolean update();
 
     public boolean isEmailExist(String email);
 

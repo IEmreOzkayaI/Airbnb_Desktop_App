@@ -226,7 +226,7 @@ public class LogIn extends javax.swing.JFrame {
         RegisterUpdate reg = new RegisterUpdate();
         reg.show();
     }//GEN-LAST:event_forgotPasswordActionPerformed
-    private void logIn(){
+    private void logIn() {
         Customer customer = new Customer().getUserByEmail(email.getText());
         HouseOwner houseOwner = new HouseOwner().getUserByEmail(email.getText());
         Personnel personnel = new Personnel().getUserByEmail(email.getText());
@@ -248,6 +248,8 @@ public class LogIn extends javax.swing.JFrame {
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
         // TODO add your handling code here:
         logIn();
+
+
     }//GEN-LAST:event_logInActionPerformed
 
     private void control(boolean result, HouseOwner houseOwner) {
@@ -261,7 +263,7 @@ public class LogIn extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Email or password is not valid");
                 } else {
                     this.dispose();
-                    Home home = new Home(true, houseOwner);
+                    Home home = new Home(houseOwner);
                     home.show();
                 }
             }
@@ -282,7 +284,8 @@ public class LogIn extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Email or password is not valid");
             } else {
                 this.dispose();
-                PersonnelScreen pScreen = new PersonnelScreen(true, personnel);
+
+                PersonnelScreen pScreen = new PersonnelScreen(personnel);
                 pScreen.show();
             }
         }
@@ -300,7 +303,7 @@ public class LogIn extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Email or password is not valid");
                 } else {
                     this.dispose();
-                    Home home = new Home(true, customer);
+                    Home home = new Home(customer);
                     home.show();
                 }
             }
