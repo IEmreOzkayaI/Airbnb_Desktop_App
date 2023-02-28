@@ -19,6 +19,8 @@ public class SingletonConnection {
     public static String insertionHouseOwner = "INSERT INTO house_owners VALUES(?,?,?,?)";
     public static String deleteFromCustomer = "DELETE FROM customers WHERE person_id=";
     public static String getCustomerInfoById = "SELECT * FROM customers WHERE person_id=";
+    public static String getHouseOwnerInfoById = "SELECT * FROM house_owners WHERE person_id=";
+
     public static String insertionHouse = "INSERT INTO houses VALUES(?,?,?,?,?,?,?)";
     public static String insertionAdvertisement = "INSERT INTO advertisements VALUES(?,?,?,?,?,?,?,?,?)";
     public static String getAdvertisementByPersonId = "SELECT * FROM advertisements WHERE person_id=";
@@ -48,9 +50,14 @@ public class SingletonConnection {
     public static String insertionWallet = "INSERT INTO wallets VALUES(?,?)";
     public static String updateWalletById = "UPDATE wallets SET total_amount=(?) WHERE id =";
     public static String deleteCommentById = "DELETE FROM comments WHERE id=";
+    public static String deleteHouseById = "DELETE FROM houses WHERE id=";
+    public static String deleteImagesByHouseId = "DELETE FROM house_images WHERE house_id=";
+
     public static String deleteCommentByBlockedPersonId = "DELETE FROM comments WHERE person_id=";
     public static String insertBlockedPerson = "INSERT INTO blocked_persons VALUES(?,?,?,?)";
-    public static String updataPersonById= "UPDATE persons SET email=(?) ,password=(?) , phone_number=(?), activation_personnel_id=(?),activation_result=(?)  WHERE id =";;
+    public static String updataPersonById = "UPDATE persons SET email=(?) ,password=(?) , phone_number=(?), activation_personnel_id=(?),activation_result=(?)  WHERE id =";
+
+    ;
 
     private SingletonConnection() {
         getCon();
@@ -59,7 +66,7 @@ public class SingletonConnection {
     public static Connection getCon() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localHost:3306/air_bnb", "root", "kaSaba.2001");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localHost:3306/air_bnb", "root", "1234");
 
         } catch (Exception e) {
             System.out.println(e);

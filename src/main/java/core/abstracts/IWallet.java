@@ -14,6 +14,6 @@ import user.concretes.Person;
 public interface IWallet {
     int balance();
     int withdraw(int money);
-    int deposit(int money); 
-    void sendMoney(int money , Wallet destinationWallet);
+    public int deposit(int money);
+    public void sendMoney(int money,Wallet wallet) ;
 }

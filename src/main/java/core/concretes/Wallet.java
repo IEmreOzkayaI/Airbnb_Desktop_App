@@ -4,7 +4,7 @@
  */
 package core.concretes;
 
-import GUI.mycompany.Home;
+import GUI.Home;
 import core.abstracts.IWallet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -93,8 +93,10 @@ public class Wallet implements IWallet {
     }
 
     @Override
-    public void sendMoney(int money, Wallet destinationWallet) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void sendMoney(int money, Wallet wallet) {
+        withdraw(money);
+        wallet.deposit(money);
+
     }
 
     public int getId() {

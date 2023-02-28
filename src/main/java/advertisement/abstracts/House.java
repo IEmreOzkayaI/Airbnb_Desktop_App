@@ -40,9 +40,9 @@ public abstract class House {
 
     public abstract void update(File[] imageFiles, String[] imagePaths);
 
-    public abstract void delete(File[] imageFiles, String[] imagePaths);
+    public abstract void delete();
 
-    public abstract void rent( File[] imageFiles, String[] imagePaths);
+    public abstract void rent(int totalPrice , Advertisement ad, int personId);
     
 
     public String getHeating() {

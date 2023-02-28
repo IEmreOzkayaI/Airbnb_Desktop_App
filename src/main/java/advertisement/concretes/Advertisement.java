@@ -4,7 +4,7 @@
  */
 package advertisement.concretes;
 
-import GUI.mycompany.PersonnelScreen;
+import GUI.PersonnelScreen;
 import Singleton.SingletonConnection;
 import advertisement.abstracts.House;
 import advertisement.abstracts.IAdvertisement;
@@ -69,11 +69,12 @@ public class Advertisement implements IAdvertisement {
     }
 
     @Override
-    public void delete(int advertisementId) {
-        String deleteAdvertisement = "DELETE FROM advertisements WHERE id='" + advertisementId + "'";
+    public void delete() {
+        String deleteAdvertisement = "DELETE FROM advertisements WHERE id='" + getId() + "'";
         try {
             pst = db.prepareStatement(deleteAdvertisement);
             pst.execute();
+            getHouse().delete();
 
         } catch (SQLException ex) {
             Logger.getLogger(PersonnelScreen.class

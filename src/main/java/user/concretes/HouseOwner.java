@@ -73,7 +73,7 @@ public class HouseOwner extends Person implements ICustomer {
             prepstmtCustomer.setInt(1, this.getId());
             prepstmtCustomer.setInt(2, this.getWallet().getId());
             prepstmtCustomer.setInt(3, 0);
-            prepstmtCustomer.setBoolean(4, this.isIsBlocked());
+            prepstmtCustomer.setBoolean(4, this.getIsBlocked());
 
             prepstmtCustomer.execute();
 
@@ -150,6 +150,45 @@ public class HouseOwner extends Person implements ICustomer {
         }
         return houseOwner;
     }
+    
+        public HouseOwner getUserById(int id) {
+        HouseOwner houseOwner = new HouseOwner();
+        String getPersonInfoByEmail = " SELECT * FROM persons WHERE id='" + id + "'";
+        try {
+            Statement stmt = db.createStatement();
+            ResultSet rs = stmt.executeQuery(getPersonInfoByEmail);
+            if (rs.next()) {
+                houseOwner.setBirthDate(rs.getString("birth_date"));
+                houseOwner.setEmail(rs.getString("email"));
+                houseOwner.setGender(rs.getString("gender"));
+                houseOwner.setId(rs.getInt("id"));
+                houseOwner.setIdentityNumber(rs.getString("identity_number"));
+                houseOwner.setName(rs.getString("name"));
+                houseOwner.setPassword(rs.getString("password"));
+                houseOwner.setPhoneNumber(rs.getString("phone_number"));
+                houseOwner.setSurname(rs.getString("surname"));
+                houseOwner.setActivationPersonnelId(rs.getInt("activation_personnel_id"));
+                houseOwner.setActivationResult(rs.getBoolean("activation_result"));
+            }
+            String getCustomerInfoByEmail = "SELECT * FROM house_owners WHERE person_id='" + houseOwner.getId() + "'";
+
+            ResultSet rs2 = stmt.executeQuery(getCustomerInfoByEmail);
+            if (rs2.next()) {
+                houseOwner.setIsBlocked(rs2.getBoolean("is_blocked"));
+                houseOwner.setPerson_id(rs2.getInt("person_id"));
+//                 customer.setRentedHouse(rs2.getString("rented_house_id"));
+                ResultSet rs3 = stmt.executeQuery(Singleton.SingletonConnection.getWalletById + "'" + rs2.getInt("wallet_id") + "'");
+                while (rs3.next()) {
+                    Wallet wallet = new Wallet(rs3.getInt("id"), rs3.getInt("total_amount"));
+                    houseOwner.setWallet(wallet);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return houseOwner;
+    }
 
     public List<Comment> getComments() {
         return comments;
@@ -167,7 +206,7 @@ public class HouseOwner extends Person implements ICustomer {
         return wallet;
     }
 
-    public boolean isIsBlocked() {
+    public boolean getIsBlocked() {
         return isBlocked;
     }
 

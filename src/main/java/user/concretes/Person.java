@@ -4,7 +4,7 @@
  */
 package user.concretes;
 
-import GUI.mycompany.Home;
+import GUI.Home;
 import Singleton.SingletonConnection;
 import advertisement.concretes.Advertisement;
 import java.sql.Connection;
@@ -130,7 +130,7 @@ public class Person implements IPerson {
     public boolean updatePassword(String email, String password) {
         String update = " UPDATE persons SET password='" + password + "' WHERE email='" + email + "'";
         Person person = getUserByEmail(email);
-        if (person.getEmail().equalsIgnoreCase(email)) {
+        if (person.getPassword().equalsIgnoreCase(password)) {
             return false;
         } else {
             try {

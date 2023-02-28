@@ -4,8 +4,8 @@
  */
 package Singleton;
 
-import GUI.mycompany.Home;
-import GUI.mycompany.SignUp;
+import GUI.Home;
+import GUI.SignUp;
 import java.sql.Connection;
 import user.concretes.Customer;
 

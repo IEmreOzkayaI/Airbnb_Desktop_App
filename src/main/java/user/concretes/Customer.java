@@ -121,6 +121,47 @@ public class Customer extends Person implements ICustomer {
         }
         return customer;
     }
+    
+    
+    public Customer getUserById(int id) {
+        Customer customer = new Customer();
+        String getPersonInfoById = " SELECT * FROM persons WHERE id ='" + id + "'";
+        try {
+            Statement stmt = db.createStatement();
+            ResultSet rs = stmt.executeQuery(getPersonInfoById);
+            if (rs.next()) {
+                customer.setBirthDate(rs.getString("birth_date"));
+                customer.setEmail(rs.getString("email"));
+                customer.setGender(rs.getString("gender"));
+                customer.setId(rs.getInt("id"));
+                customer.setIdentityNumber(rs.getString("identity_number"));
+                customer.setName(rs.getString("name"));
+                customer.setPassword(rs.getString("password"));
+                customer.setPhoneNumber(rs.getString("phone_number"));
+                customer.setSurname(rs.getString("surname"));
+                customer.setActivationPersonnelId(rs.getInt("activation_personnel_id"));
+                customer.setActivationResult(rs.getBoolean("activation_result"));
+
+            }
+            String getCustomerInfoById = "SELECT * FROM customers WHERE person_id='" + customer.getId() + "'";
+
+            ResultSet rs2 = stmt.executeQuery(getCustomerInfoById);
+            if (rs2.next()) {
+                customer.setIsBlocked(rs2.getBoolean("is_blocked"));
+                customer.setPerson_id(rs2.getInt("person_id"));
+//                customer.setRentedHouse(rs2.getString("rented_house_id"));
+                ResultSet rs3 = stmt.executeQuery(Singleton.SingletonConnection.getWalletById + "'" + rs2.getInt("wallet_id") + "'");
+                while (rs3.next()) {
+                    Wallet wallet = new Wallet(rs3.getInt("id"), rs3.getInt("total_amount"));
+                    customer.setWallet(wallet);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return customer;
+    }
 
     public List<Comment> getComments() {
         return comments;

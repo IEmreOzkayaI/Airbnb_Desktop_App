@@ -17,6 +17,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import user.concretes.Customer;
+import user.concretes.HouseOwner;
 
 /**
  *
@@ -79,13 +82,46 @@ public class Apartment extends House {
     }
 
     @Override
-    public void delete(File[] imageFiles, String[] imagePaths) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void delete() {
+        try {
+            pst = db.prepareStatement(SingletonConnection.deleteHouseById+"'"+getId()+"'");
+            pst.execute();
+            pst = db.prepareStatement(SingletonConnection.deleteImagesByHouseId+"'"+getId()+"'");
+            pst.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(Apartment.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
-    public void rent(File[] imageFiles, String[] imagePaths) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void  rent(int totalPrice , Advertisement ad, int personId){
+                       Customer customer = new Customer();
+                customer = customer.getUserById(personId);
+                if (customer.getWallet() == null) {
+                    HouseOwner hoOwner = new HouseOwner();
+                    hoOwner = hoOwner.getUserById(personId);
+                    if (hoOwner.getWallet().getTotalAmount() < totalPrice) {
+                        JOptionPane.showMessageDialog(null, "You don't have enough money");
+                        hoOwner.setRentedHouse(ad.getHouse());
+
+                    } else {
+                        HouseOwner hoOwner3 = new HouseOwner();
+                        hoOwner3 = hoOwner3.getUserById(ad.getHouseOwnerId());
+
+                        hoOwner.getWallet().sendMoney(totalPrice, hoOwner3.getWallet());
+                    }
+                } else {
+                    if (customer.getWallet().getTotalAmount() < totalPrice) {
+                        JOptionPane.showMessageDialog(null, "You don't have enough money");
+                    } else {
+                        HouseOwner hoOwner2 = new HouseOwner();
+                        hoOwner2 = hoOwner2.getUserById(ad.getHouseOwnerId());
+
+                        customer.getWallet().sendMoney(totalPrice, hoOwner2.getWallet());
+                        customer.setRentedHouse(ad.getHouse());
+                       
+                    }
+                }
     }
 
 }

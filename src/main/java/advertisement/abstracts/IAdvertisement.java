@@ -18,7 +18,7 @@ public interface IAdvertisement {
 
     void update(Advertisement advertisement, int ownerId);
 
-    void delete(int advertisementId);
+    void delete();
 
     void validateAdvertisement(Personnel personnel, int advertisementId);
 
